@@ -3,52 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<meta name="theme-color" content="#0C0E0F">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Подбор стрижки</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@500&display=swap">
 <style>
 :root{
-  --bg:#F3F4F2; --surface:#FFFFFF; --surface-2:#ECEEEC;
-  --ink:#15181A; --muted:#5B6266; --line:#D6DAD8;
-  --accent:#8C1D28; --accent-ink:#FFFFFF; --accent-soft:#F7E8E9;
-  --steel:#2B4A6B; --pole-b:#FFFFFF;
-  --shadow:0 12px 32px rgba(20,24,26,.07);
-  --backdrop:rgba(10,12,13,.55);
+  color-scheme:dark;
+  --bg:#0C0E0F; --surface:rgba(24,27,29,.80); --surface-solid:#171A1C; --surface-2:rgba(255,255,255,.07);
+  --ink:#EDEEEB; --muted:#9CA3A6; --line:rgba(255,255,255,.12);
+  --accent:#C3343F; --accent-ink:#FFFFFF; --accent-text:#EC727C; --accent-soft:rgba(214,72,84,.13);
+  --steel:#7FA3C8; --pole-b:#EDEEEB;
+  --shadow:0 16px 44px rgba(0,0,0,.5);
+  --backdrop:rgba(0,0,0,.72);
   --f-display:"Oswald","Arial Narrow",Impact,sans-serif;
   --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    color-scheme:dark;
-    --bg:#111314; --surface:#1A1D1F; --surface-2:#24282B;
-    --ink:#ECEDEA; --muted:#9BA2A5; --line:#2F3437;
-    --accent:#D65A64; --accent-ink:#1A0A0C; --accent-soft:#2B1719;
-    --steel:#7FA3C8; --pole-b:#ECEDEA;
-    --shadow:0 12px 32px rgba(0,0,0,.35);
-    --backdrop:rgba(0,0,0,.7);
-  }
-}
-:root[data-theme="dark"]{
-  color-scheme:dark;
-  --bg:#111314; --surface:#1A1D1F; --surface-2:#24282B;
-  --ink:#ECEDEA; --muted:#9BA2A5; --line:#2F3437;
-  --accent:#D65A64; --accent-ink:#1A0A0C; --accent-soft:#2B1719;
-  --steel:#7FA3C8; --pole-b:#ECEDEA;
-  --shadow:0 12px 32px rgba(0,0,0,.35);
-  --backdrop:rgba(0,0,0,.7);
-}
 
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body{background:radial-gradient(120% 50% at 50% 0%,rgba(195,52,63,.18),transparent 65%) var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 h1,h2,h3,p{margin:0}
-.wrap{max-width:640px;margin-inline:auto;padding-inline:16px}
+.wrap{max-width:640px;margin-inline:auto;padding-inline:16px;position:relative;z-index:1}
 :focus-visible{outline:3px solid var(--steel);outline-offset:2px}
 
 /* Header */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);background:color-mix(in srgb,var(--bg) 90%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);background:color-mix(in srgb,var(--bg) 72%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .top-in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
 .brand{display:flex;flex-direction:column;line-height:1}
 .brand-name{font-family:var(--f-display);font-weight:600;text-transform:uppercase;letter-spacing:.07em;font-size:22px}
@@ -68,7 +50,7 @@ h1,h2,h3,p{margin:0}
 
 /* Hero */
 .hero{padding-block:28px 22px}
-.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-text);margin-bottom:12px}
 h1{font-family:var(--f-display);font-weight:600;font-size:clamp(34px,9.5vw,54px);line-height:1.02;text-transform:uppercase;letter-spacing:.005em;text-wrap:balance}
 .lead{color:var(--muted);margin-top:14px;max-width:34em}
 .lead b{color:var(--ink);font-weight:700}
@@ -76,7 +58,7 @@ h1{font-family:var(--f-display);font-weight:600;font-size:clamp(34px,9.5vw,54px)
 .hero-actions .btn{flex:1 1 180px}
 
 /* Quiz card */
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:20px}
+.card{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:20px}
 #quiz{scroll-margin-top:84px;margin-bottom:40px}
 .q-meta{display:flex;justify-content:space-between;align-items:center;font-family:var(--f-mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
 .bar{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden;margin:10px 0 20px}
@@ -107,7 +89,7 @@ h1{font-family:var(--f-display);font-weight:600;font-size:clamp(34px,9.5vw,54px)
 .badge{display:inline-block;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);padding:4px 8px;border-radius:4px;margin-bottom:10px}
 .cut-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .cut h3{font-family:var(--f-display);font-weight:500;font-size:23px;line-height:1.1;text-transform:uppercase}
-.match{font-family:var(--f-mono);font-size:13px;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
+.match{font-family:var(--f-mono);font-size:13px;color:var(--accent-text);white-space:nowrap;font-variant-numeric:tabular-nums}
 .cut-desc{color:var(--muted);font-size:14.5px;margin-top:6px}
 .zones{display:grid;gap:7px;margin:16px 0 6px}
 .zone{display:grid;grid-template-columns:74px minmax(0,1fr) 50px;align-items:center;gap:10px;font-size:13px}
@@ -117,7 +99,7 @@ h1{font-family:var(--f-display);font-weight:600;font-size:clamp(34px,9.5vw,54px)
 .zones-cap{font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-bottom:14px;letter-spacing:.02em}
 .fits{list-style:none;padding:0;margin:0 0 14px;display:flex;flex-wrap:wrap;gap:6px}
 .fits li{font-size:12.5px;font-weight:600;background:var(--surface-2);padding:5px 9px;border-radius:4px}
-.fits li::before{content:"✓ ";color:var(--accent)}
+.fits li::before{content:"✓ ";color:var(--accent-text)}
 .cut-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:12px}
 .price{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums}
 .note{background:var(--surface-2);border-radius:10px;padding:14px;font-size:14px;margin-top:14px}
@@ -143,7 +125,7 @@ h1{font-family:var(--f-display);font-weight:600;font-size:clamp(34px,9.5vw,54px)
 
 /* Booking sheet */
 .sheet-backdrop{position:fixed;inset:0;z-index:50;background:var(--backdrop);display:flex;align-items:flex-end;justify-content:center}
-.sheet{background:var(--surface);color:var(--ink);width:100%;max-width:560px;max-height:92vh;max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border-radius:16px 16px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom,0px))}
+.sheet{background:var(--surface-solid);color:var(--ink);width:100%;max-width:560px;max-height:92vh;max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border-radius:16px 16px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom,0px))}
 @media (min-width:700px){.sheet-backdrop{align-items:center}.sheet{border-radius:16px;padding:24px}}
 .sheet-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
 .sheet-head h2{font-family:var(--f-display);font-weight:600;font-size:26px;text-transform:uppercase}
@@ -162,7 +144,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 .chip:disabled{opacity:.35;text-decoration:line-through;cursor:not-allowed}
 .times{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .times .chip{font-family:var(--f-mono);font-size:14px;padding:0}
-.err{color:var(--accent);font-size:13px;font-weight:600}
+.err{color:var(--accent-text);font-size:13px;font-weight:600}
 .err:empty{display:none}
 .hint-empty{font-size:13px;color:var(--muted)}
 .done-mark{width:56px;height:56px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;margin-bottom:14px}
@@ -173,14 +155,19 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 .owner dl{margin:0;display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px 12px;padding:12px;font-size:14px}
 .owner dt{color:var(--muted)}
 .owner dd{margin:0;font-weight:600;overflow-wrap:anywhere}
-.owner .src{color:var(--accent)}
+.owner .src{color:var(--accent-text)}
 .demo-note{font-size:13px;color:var(--muted);margin-bottom:16px}
 
+#bg{position:fixed;left:0;top:0;width:100%;height:100vh;z-index:0;pointer-events:none;display:block}
+.promo-hint{font-size:13px;color:var(--muted)}
+.promo-hint:empty{display:none}
 @media (max-width:360px){.opts.faces{grid-template-columns:repeat(2,minmax(0,1fr))}.times{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+
+<canvas id="bg" aria-hidden="true"></canvas>
 
 <header class="top">
   <div class="wrap top-in">
@@ -194,7 +181,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
   <section class="hero">
     <p class="eyebrow">Подбор стрижки · 5 вопросов · 1 минута</p>
     <h1>Какая стрижка подойдёт именно тебе?</h1>
-    <p class="lead">Ответь на пять вопросов про лицо, волосы и стиль. Покажем три стрижки, которые тебе пойдут, и дадим <b>скидку 15% на первый визит</b>.</p>
+    <p class="lead">Ответь на пять вопросов про лицо, волосы и стиль. Покажем три стрижки, которые тебе пойдут. Если ты у нас впервые — <b>скидка 15% на первую стрижку</b>.</p>
     <div class="hero-actions">
       <a href="#quiz" class="btn">Подобрать стрижку</a>
       <button type="button" class="btn btn-ghost" data-book="">Сразу записаться</button>
@@ -254,8 +241,14 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
         <span class="err" id="err-phone"></span>
       </div>
       <div class="field">
+        <span class="lbl" id="lbl-visit">Ты уже был в «Твой барбер»?</span>
+        <div class="chips" id="bk-visit" role="group" aria-labelledby="lbl-visit"></div>
+        <span class="err" id="err-visit"></span>
+      </div>
+      <div class="field">
         <label for="bk-promo">Промокод</label>
         <input id="bk-promo" class="inp" type="text" autocapitalize="characters" placeholder="Появится после подбора стрижки">
+        <span class="promo-hint" id="promo-hint"></span>
       </div>
       <button type="submit" class="btn btn-block">Записаться</button>
     </form>
@@ -485,10 +478,11 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
       html += '<div class="note"><b>Отращиваешь бороду?</b>Барбер подскажет форму под твоё лицо. Первую коррекцию лучше сделать через 3–4 недели.</div>';
     }
 
-    html += '<div class="promo"><span class="promo-lbl">Скидка 15% на первый визит</span>' +
+    var used = store('brb_used') === '1';
+    html += '<div class="promo"><span class="promo-lbl">' + (used ? 'Твой код' : 'Скидка 15% на первую стрижку') + '</span>' +
       '<div class="promo-row"><span class="promo-code" id="promo-code">' + code + '</span>' +
       '<button type="button" class="btn btn-sm btn-ghost" data-copy>Скопировать</button></div>' +
-      '<p class="promo-sub">Код уже подставлен в запись. Можно просто назвать его барберу.</p></div>' +
+      '<p class="promo-sub">' + (used ? 'Скидку по этому коду ты уже использовал на первом визите. Дальше цены обычные.' : 'Только для новых клиентов и только на первый визит: барбер сверит номер телефона с базой. Код уже подставлен в запись.') + '</p></div>' +
       '<div class="res-actions"><button type="button" class="btn btn-block" data-book="' + ranked[0].c.id + '">Записаться на «' + ranked[0].c.name + '»</button>' +
       '<button type="button" class="linkbtn" data-restart>Пройти подбор заново</button></div>';
 
@@ -511,7 +505,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
   /* ---------- Booking ---------- */
   var sheet = $('sheet'), form = $('book-form'), done = $('book-done');
-  var bk = {date:null, time:null, barber:BARBERS[0]};
+  var bk = {date:null, time:null, barber:BARBERS[0], visit:null};
   var lastFocus = null;
 
   function days(){
@@ -561,15 +555,30 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     box.innerHTML = html;
   }
 
-  function clearErrors(){ ['date','time','name','phone'].forEach(function(k){ $('err-' + k).textContent = ''; }); }
+  function renderVisit(){
+    $('bk-visit').innerHTML = [['new','Впервые'],['repeat','Уже был']].map(function(o){
+      var on = bk.visit === o[0];
+      return '<button type="button" class="chip' + (on ? ' is-on' : '') + '" data-visit="' + o[0] + '" aria-pressed="' + on + '">' + o[1] + '</button>';
+    }).join('');
+  }
+  function promoHint(){
+    var h = $('promo-hint'), code = $('bk-promo').value.trim();
+    if(!code){ h.textContent = ''; return; }
+    if(bk.visit === 'repeat') h.textContent = 'Скидка по коду действует только на первый визит. Запишем без скидки.';
+    else if(store('brb_used') === '1') h.textContent = 'Этот код уже использован. Запишем без скидки.';
+    else if(bk.visit === 'new') h.textContent = 'Скидка 15% применится к первой стрижке.';
+    else h.textContent = '';
+  }
+
+  function clearErrors(){ ['date','time','name','phone','visit'].forEach(function(k){ $('err-' + k).textContent = ''; }); }
 
   function openBook(serviceId){
     lastFocus = document.activeElement;
-    bk = {date:null, time:null, barber:BARBERS[0]};
+    bk = {date:null, time:null, barber:BARBERS[0], visit:null};
     form.reset(); clearErrors();
     fillServices(serviceId);
     $('bk-promo').value = promo;
-    renderBarbers(); renderDates(); renderTimes();
+    renderBarbers(); renderDates(); renderTimes(); renderVisit(); promoHint();
     form.hidden = false; done.hidden = true;
     $('sheet-title').textContent = 'Запись';
     sheet.hidden = false;
@@ -602,6 +611,8 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     this.value = fmtPhone(this.value);
   });
 
+  $('bk-promo').addEventListener('input', promoHint);
+
   form.addEventListener('submit', function(e){
     e.preventDefault();
     clearErrors();
@@ -612,6 +623,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     if(bk.time === null){ $('err-time').textContent = 'Выбери свободное время'; ok = false; first = first || $('bk-times'); }
     if(!name){ $('err-name').textContent = 'Напиши имя, чтобы барбер знал, кого ждать'; ok = false; first = first || $('bk-name'); }
     if(phoneDigits.length !== 11){ $('err-phone').textContent = 'Нужен номер из 11 цифр, например +7 (927) 123-45-67'; ok = false; first = first || $('bk-phone'); }
+    if(!bk.visit){ $('err-visit').textContent = 'Отметь, был ли ты у нас раньше'; ok = false; first = first || $('bk-visit'); }
     if(!ok){ first.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block:'center'}); return; }
 
     var sel = $('bk-service'), svcName = sel.options[sel.selectedIndex].text.split(' · ')[0];
@@ -619,6 +631,8 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     var when = (bk.date < 2 ? day.top.toLowerCase() + ', ' : '') + day.sub + ', ' + bk.time + ':00';
     var code = $('bk-promo').value.trim().toUpperCase();
     var source = code && code === promo ? 'Сайт · подбор стрижки' : 'Сайт';
+    var discount = !!code && bk.visit === 'new' && store('brb_used') !== '1';
+    if(discount) store('brb_used', '1');
 
     done.innerHTML =
       '<div class="done-mark" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>' +
@@ -630,9 +644,10 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
         '<dt>Мастер</dt><dd>' + esc(bk.barber) + '</dd>' +
         '<dt>Время</dt><dd>' + esc(when) + '</dd>' +
         '<dt>Источник</dt><dd class="src">' + source + '</dd>' +
-        '<dt>Промокод</dt><dd>' + (code ? esc(code) + ' · −15%' : 'нет') + '</dd>' +
+        '<dt>Визит</dt><dd>' + (bk.visit === 'new' ? 'Первый · новый клиент' : 'Повторный') + '</dd>' +
+        '<dt>Промокод</dt><dd>' + (code ? esc(code) + (discount ? ' · −15%' : ' · без скидки') : 'нет') + '</dd>' +
       '</dl></div>' +
-      '<p class="demo-note">Это демо: запись никуда не отправлена. В рабочей версии она сразу попадёт в журнал YClients с меткой источника.</p>' +
+      '<p class="demo-note">Это демо: запись никуда не отправлена. В рабочей версии она сразу попадёт в журнал YClients с меткой источника, а скидка сработает, только если номера телефона ещё нет в базе.</p>' +
       '<button type="button" class="btn btn-block" data-close>Готово</button>';
     form.hidden = true; done.hidden = false;
     $('sheet-title').textContent = 'Записано';
@@ -641,10 +656,12 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
   /* ---------- Events ---------- */
   document.addEventListener('click', function(e){
-    var t = e.target.closest('[data-opt],[data-back],[data-restart],[data-book],[data-close],[data-copy],[data-barber],[data-date],[data-time]');
+    var t = e.target.closest('[data-opt],[data-back],[data-restart],[data-book],[data-close],[data-copy],[data-barber],[data-date],[data-time],[data-visit]');
     if(!t){ if(e.target === sheet) closeBook(); return; }
 
-    if(t.hasAttribute('data-opt')){
+    if(t.hasAttribute('data-visit')){
+      bk.visit = t.getAttribute('data-visit'); $('err-visit').textContent = ''; renderVisit(); promoHint();
+    } else if(t.hasAttribute('data-opt')){
       var q = QUESTIONS[state.step];
       state.a[q.key] = t.getAttribute('data-opt');
       t.classList.add('is-on');
@@ -675,6 +692,141 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !sheet.hidden) closeBook(); });
 
   render();
+})();
+</script>
+<script>
+/* Animated background: hexagonal LED ceiling with light running along the tubes */
+(function(){
+  var c = document.getElementById('bg');
+  if(!c || !c.getContext) return;
+  var ctx = c.getContext('2d');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var grid = document.createElement('canvas'), gctx = grid.getContext('2d');
+  var W = 0, H = 0, dpr = 1, R = 50, verts, adj, hexes, walkers = [], flashes = [], nextFlash = 0, last = 0, raf = 0;
+  var COLORS = ['236,238,240','236,238,240','236,238,240','214,72,84','127,163,200'];
+
+  function build(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = Math.max(window.innerHeight, (window.screen && window.screen.height) || 0);
+    c.width = grid.width = Math.round(W * dpr);
+    c.height = grid.height = Math.round(H * dpr);
+    c.style.height = H + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    gctx.setTransform(dpr,0,0,dpr,0,0);
+    R = W < 600 ? 40 : 56;
+    var h = Math.sqrt(3) * R;
+    verts = {}; adj = {}; hexes = [];
+    var edges = [];
+    function key(x,y){ return Math.round(x / (R/2)) + ',' + Math.round(y / (h/2)); }
+    for(var col = -1; col * 1.5 * R < W + 2 * R; col++){
+      for(var row = -1; row * h < H + h; row++){
+        var cx = col * 1.5 * R, cy = row * h + (col & 1 ? h / 2 : 0), pts = [];
+        for(var k = 0; k < 6; k++){ var a = Math.PI / 3 * k; pts.push([cx + R * Math.cos(a), cy + R * Math.sin(a)]); }
+        hexes.push(pts);
+        for(k = 0; k < 6; k++){
+          var p = pts[k], q = pts[(k + 1) % 6], ka = key(p[0],p[1]), kb = key(q[0],q[1]);
+          verts[ka] = p; verts[kb] = q;
+          adj[ka] = adj[ka] || []; adj[kb] = adj[kb] || [];
+          if(adj[ka].indexOf(kb) < 0){ adj[ka].push(kb); adj[kb].push(ka); edges.push([p,q]); }
+        }
+      }
+    }
+    gctx.clearRect(0,0,W,H);
+    gctx.strokeStyle = 'rgba(255,255,255,0.045)';
+    gctx.lineWidth = 1;
+    gctx.beginPath();
+    edges.forEach(function(e){ gctx.moveTo(e[0][0], e[0][1]); gctx.lineTo(e[1][0], e[1][1]); });
+    gctx.stroke();
+    var keys = Object.keys(verts), n = W < 600 ? 9 : 16;
+    walkers = [];
+    for(var i = 0; i < n; i++) walkers.push(spawn(keys[Math.floor(Math.random() * keys.length)]));
+    flashes = [];
+  }
+
+  function pick(from, prev){
+    var list = adj[from].filter(function(k){ return k !== prev; });
+    if(!list.length) list = adj[from];
+    return list[Math.floor(Math.random() * list.length)];
+  }
+  function spawn(k){
+    return {prev:null, from:k, to:pick(k,null), t:Math.random(), speed:45 + Math.random() * 55,
+            color:COLORS[Math.floor(Math.random() * COLORS.length)], trail:[]};
+  }
+
+  function drawHex(pts, alpha, color){
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for(var i = 1; i < 6; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(' + color + ',' + (alpha * 0.05) + ')';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(' + color + ',' + (alpha * 0.10) + ')';
+    ctx.lineWidth = 7; ctx.stroke();
+    ctx.strokeStyle = 'rgba(' + color + ',' + (alpha * 0.55) + ')';
+    ctx.lineWidth = 1.4; ctx.stroke();
+  }
+
+  function frame(now){
+    var dt = Math.min(0.05, (now - last) / 1000 || 0);
+    last = now;
+    ctx.clearRect(0,0,W,H);
+    ctx.drawImage(grid, 0, 0, W, H);
+
+    if(now > nextFlash){
+      flashes.push({pts:hexes[Math.floor(Math.random() * hexes.length)], t:0, color:Math.random() < 0.35 ? COLORS[3] : COLORS[0]});
+      nextFlash = now + 700 + Math.random() * 1300;
+    }
+    flashes = flashes.filter(function(f){ return (f.t += dt / 2.6) < 1; });
+    flashes.forEach(function(f){ drawHex(f.pts, Math.sin(f.t * Math.PI), f.color); });
+
+    ctx.lineCap = 'round';
+    walkers.forEach(function(w){
+      w.t += w.speed * dt / R;
+      while(w.t >= 1){ w.t -= 1; w.prev = w.from; w.from = w.to; w.to = pick(w.from, w.prev); }
+      var a = verts[w.from], b = verts[w.to];
+      var x = a[0] + (b[0] - a[0]) * w.t, y = a[1] + (b[1] - a[1]) * w.t;
+      w.trail.push([x,y]);
+      if(w.trail.length > 22) w.trail.shift();
+      for(var i = 1; i < w.trail.length; i++){
+        var al = i / w.trail.length;
+        ctx.beginPath();
+        ctx.moveTo(w.trail[i-1][0], w.trail[i-1][1]);
+        ctx.lineTo(w.trail[i][0], w.trail[i][1]);
+        ctx.strokeStyle = 'rgba(' + w.color + ',' + (al * 0.14) + ')'; ctx.lineWidth = 8; ctx.stroke();
+        ctx.strokeStyle = 'rgba(' + w.color + ',' + (al * 0.85) + ')'; ctx.lineWidth = 1.8; ctx.stroke();
+      }
+      ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + w.color + ',0.12)'; ctx.fill();
+      ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + w.color + ',0.95)'; ctx.fill();
+    });
+    raf = requestAnimationFrame(frame);
+  }
+
+  function start(){
+    cancelAnimationFrame(raf);
+    if(reduce){
+      ctx.clearRect(0,0,W,H); ctx.drawImage(grid, 0, 0, W, H);
+      for(var i = 0; i < 6; i++) drawHex(hexes[Math.floor(Math.random() * hexes.length)], 0.6, i % 3 ? COLORS[0] : COLORS[3]);
+      return;
+    }
+    last = performance.now();
+    raf = requestAnimationFrame(frame);
+  }
+
+  var rt = 0;
+  window.addEventListener('resize', function(){
+    clearTimeout(rt);
+    rt = setTimeout(function(){
+      if(window.innerWidth !== W || window.innerHeight > H){ build(); start(); }
+    }, 200);
+  });
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden) cancelAnimationFrame(raf); else start();
+  });
+
+  build(); start();
 })();
 </script>
 </body>
