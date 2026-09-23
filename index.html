@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Подбор стрижки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+:root{
+  --bg:#F3F4F2; --surface:#FFFFFF; --surface-2:#ECEEEC;
+  --ink:#15181A; --muted:#5B6266; --line:#D6DAD8;
+  --accent:#8C1D28; --accent-ink:#FFFFFF; --accent-soft:#F7E8E9;
+  --steel:#2B4A6B; --pole-b:#FFFFFF;
+  --shadow:0 12px 32px rgba(20,24,26,.07);
+  --backdrop:rgba(10,12,13,.55);
+  --f-display:"Oswald","Arial Narrow",Impact,sans-serif;
+  --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#111314; --surface:#1A1D1F; --surface-2:#24282B;
+    --ink:#ECEDEA; --muted:#9BA2A5; --line:#2F3437;
+    --accent:#D65A64; --accent-ink:#1A0A0C; --accent-soft:#2B1719;
+    --steel:#7FA3C8; --pole-b:#ECEDEA;
+    --shadow:0 12px 32px rgba(0,0,0,.35);
+    --backdrop:rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#111314; --surface:#1A1D1F; --surface-2:#24282B;
+  --ink:#ECEDEA; --muted:#9BA2A5; --line:#2F3437;
+  --accent:#D65A64; --accent-ink:#1A0A0C; --accent-soft:#2B1719;
+  --steel:#7FA3C8; --pole-b:#ECEDEA;
+  --shadow:0 12px 32px rgba(0,0,0,.35);
+  --backdrop:rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+h1,h2,h3,p{margin:0}
+.wrap{max-width:640px;margin-inline:auto;padding-inline:16px}
+:focus-visible{outline:3px solid var(--steel);outline-offset:2px}
+
+/* Header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);background:color-mix(in srgb,var(--bg) 90%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.top-in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
+.brand{display:flex;flex-direction:column;line-height:1}
+.brand-name{font-family:var(--f-display);font-weight:600;text-transform:uppercase;letter-spacing:.07em;font-size:22px}
+.brand-city{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:5px}
+.pole{height:6px;background:repeating-linear-gradient(-45deg,var(--accent) 0 10px,var(--pole-b) 10px 20px,var(--steel) 20px 30px,var(--pole-b) 30px 40px)}
+
+/* Buttons */
+.btn{appearance:none;border:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 22px;border-radius:6px;background:var(--accent);color:var(--accent-ink);font:700 15px/1.1 var(--f-body);text-decoration:none;cursor:pointer;transition:transform .12s ease,filter .15s ease}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(1px)}
+.btn-ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn-ghost:hover{box-shadow:inset 0 0 0 1.5px var(--ink);filter:none}
+.btn-sm{min-height:42px;padding:0 16px;font-size:14px}
+.btn-block{width:100%}
+.linkbtn{appearance:none;background:none;border:0;padding:8px 0;font:600 14px var(--f-body);color:var(--muted);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.linkbtn:hover{color:var(--ink)}
+
+/* Hero */
+.hero{padding-block:28px 22px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+h1{font-family:var(--f-display);font-weight:600;font-size:clamp(34px,9.5vw,54px);line-height:1.02;text-transform:uppercase;letter-spacing:.005em;text-wrap:balance}
+.lead{color:var(--muted);margin-top:14px;max-width:34em}
+.lead b{color:var(--ink);font-weight:700}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.hero-actions .btn{flex:1 1 180px}
+
+/* Quiz card */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:20px}
+#quiz{scroll-margin-top:84px;margin-bottom:40px}
+.q-meta{display:flex;justify-content:space-between;align-items:center;font-family:var(--f-mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
+.bar{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden;margin:10px 0 20px}
+.bar>span{display:block;height:100%;border-radius:4px;background:repeating-linear-gradient(-45deg,var(--accent) 0 8px,var(--steel) 8px 16px);background-size:22.6px 22.6px;transition:width .35s ease;animation:pole 1.2s linear infinite}
+@keyframes pole{to{background-position:22.6px 0}}
+.q-title{font-family:var(--f-display);font-weight:500;font-size:clamp(24px,6.4vw,30px);line-height:1.1;text-transform:uppercase;text-wrap:balance}
+.q-hint{color:var(--muted);margin-top:8px;font-size:14px}
+.opts{display:grid;gap:10px;grid-template-columns:1fr;margin-top:18px}
+.opts.faces{grid-template-columns:repeat(3,minmax(0,1fr))}
+.opts.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.opt{appearance:none;font:inherit;color:inherit;text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;min-height:60px;transition:border-color .15s ease,background .15s ease}
+.opt:hover{border-color:var(--ink)}
+.opt.is-on{border-color:var(--accent);background:var(--accent-soft)}
+.opt svg{flex:none;width:34px;height:34px;color:var(--ink)}
+.faces .opt,.two .opt{flex-direction:column;justify-content:center;text-align:center;padding:14px 6px;gap:8px}
+.faces .opt svg{width:42px;height:50px}
+.opt-t{display:block;font-weight:700;font-size:15px;line-height:1.25}
+.opt-s{display:block;color:var(--muted);font-size:13px;font-weight:500;margin-top:3px;line-height:1.35}
+.q-nav{display:flex;justify-content:space-between;align-items:center;margin-top:14px;min-height:36px}
+
+/* Results */
+.res-title{font-family:var(--f-display);font-weight:600;font-size:clamp(26px,7vw,34px);line-height:1.05;text-transform:uppercase}
+.answers{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 18px;padding:0;list-style:none}
+.answers li{font-size:12.5px;font-weight:600;padding:5px 9px;border-radius:4px;background:var(--surface-2);color:var(--muted)}
+.cuts{display:grid;gap:14px}
+.cut{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--surface)}
+.cut.best{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.badge{display:inline-block;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);padding:4px 8px;border-radius:4px;margin-bottom:10px}
+.cut-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.cut h3{font-family:var(--f-display);font-weight:500;font-size:23px;line-height:1.1;text-transform:uppercase}
+.match{font-family:var(--f-mono);font-size:13px;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
+.cut-desc{color:var(--muted);font-size:14.5px;margin-top:6px}
+.zones{display:grid;gap:7px;margin:16px 0 6px}
+.zone{display:grid;grid-template-columns:74px minmax(0,1fr) 50px;align-items:center;gap:10px;font-size:13px}
+.zone-bar{height:8px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.zone-bar span{display:block;height:100%;background:var(--ink);border-radius:4px}
+.zone-v{font-family:var(--f-mono);font-size:12px;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.zones-cap{font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-bottom:14px;letter-spacing:.02em}
+.fits{list-style:none;padding:0;margin:0 0 14px;display:flex;flex-wrap:wrap;gap:6px}
+.fits li{font-size:12.5px;font-weight:600;background:var(--surface-2);padding:5px 9px;border-radius:4px}
+.fits li::before{content:"✓ ";color:var(--accent)}
+.cut-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:12px}
+.price{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums}
+.note{background:var(--surface-2);border-radius:10px;padding:14px;font-size:14px;margin-top:14px}
+.note b{display:block;margin-bottom:2px}
+.promo{margin-top:18px;border:1.5px dashed var(--accent);border-radius:12px;padding:16px;background:var(--accent-soft)}
+.promo-lbl{font-weight:700}
+.promo-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 8px;flex-wrap:wrap}
+.promo-code{font-family:var(--f-mono);font-size:26px;letter-spacing:.12em;user-select:all;-webkit-user-select:all}
+.promo-sub{font-size:13px;color:var(--muted)}
+.res-actions{display:grid;gap:8px;margin-top:18px;justify-items:center}
+
+/* Services */
+.sec{margin-bottom:40px}
+.sec-title{font-family:var(--f-display);font-weight:600;font-size:28px;text-transform:uppercase;margin-bottom:12px}
+.svc{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.svc li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:13px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.svc-n{font-weight:700}
+.svc-d{grid-column:1;font-size:13px;color:var(--muted)}
+.svc-p{grid-column:2;grid-row:1/span 2;align-self:center;font-family:var(--f-mono);font-size:15px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fine{font-size:13px;color:var(--muted);margin-top:10px}
+.foot{border-top:1px solid var(--line);padding-block:22px 36px;font-size:13px;color:var(--muted);display:grid;gap:4px}
+.foot b{color:var(--ink)}
+
+/* Booking sheet */
+.sheet-backdrop{position:fixed;inset:0;z-index:50;background:var(--backdrop);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);color:var(--ink);width:100%;max-width:560px;max-height:92vh;max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border-radius:16px 16px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom,0px))}
+@media (min-width:700px){.sheet-backdrop{align-items:center}.sheet{border-radius:16px;padding:24px}}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.sheet-head h2{font-family:var(--f-display);font-weight:600;font-size:26px;text-transform:uppercase}
+.icon-btn{appearance:none;border:0;background:var(--surface-2);color:var(--ink);width:40px;height:40px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer;flex:none}
+.field{display:grid;gap:7px;margin-bottom:16px;min-width:0}
+.field>label,.lbl{font-size:13px;font-weight:700}
+.inp{appearance:none;width:100%;min-height:50px;padding:0 14px;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:500 16px var(--f-body)}
+.inp:focus{border-color:var(--ink);outline:none}
+select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin-inline:-16px;padding-inline:16px}
+.chips::-webkit-scrollbar{display:none}
+.chip{appearance:none;flex:none;min-height:46px;padding:6px 14px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:600 14px/1.2 var(--f-body);cursor:pointer;text-align:center}
+.chip small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+.chip.is-on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip.is-on small{color:inherit;opacity:.75}
+.chip:disabled{opacity:.35;text-decoration:line-through;cursor:not-allowed}
+.times{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.times .chip{font-family:var(--f-mono);font-size:14px;padding:0}
+.err{color:var(--accent);font-size:13px;font-weight:600}
+.err:empty{display:none}
+.hint-empty{font-size:13px;color:var(--muted)}
+.done-mark{width:56px;height:56px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;margin-bottom:14px}
+.done-title{font-family:var(--f-display);font-weight:600;font-size:28px;text-transform:uppercase;line-height:1.05}
+.done-sub{color:var(--muted);margin-top:6px}
+.owner{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:18px 0}
+.owner-h{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:var(--surface-2);padding:9px 12px;color:var(--muted)}
+.owner dl{margin:0;display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px 12px;padding:12px;font-size:14px}
+.owner dt{color:var(--muted)}
+.owner dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.owner .src{color:var(--accent)}
+.demo-note{font-size:13px;color:var(--muted);margin-bottom:16px}
+
+@media (max-width:360px){.opts.faces{grid-template-columns:repeat(2,minmax(0,1fr))}.times{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand"><span class="brand-name">Твой барбер</span><span class="brand-city">Астрахань · Татищева, 22</span></div>
+    <button type="button" class="btn btn-sm" data-book="">Записаться</button>
+  </div>
+  <div class="pole" aria-hidden="true"></div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">Подбор стрижки · 5 вопросов · 1 минута</p>
+    <h1>Какая стрижка подойдёт именно тебе?</h1>
+    <p class="lead">Ответь на пять вопросов про лицо, волосы и стиль. Покажем три стрижки, которые тебе пойдут, и дадим <b>скидку 15% на первый визит</b>.</p>
+    <div class="hero-actions">
+      <a href="#quiz" class="btn">Подобрать стрижку</a>
+      <button type="button" class="btn btn-ghost" data-book="">Сразу записаться</button>
+    </div>
+  </section>
+
+  <section id="quiz" class="card" aria-live="polite"></section>
+
+  <section class="sec" aria-labelledby="svc-title">
+    <h2 class="sec-title" id="svc-title">Услуги и цены</h2>
+    <ul class="svc" id="svc-list"></ul>
+    <p class="fine">Цены из онлайн-записи «Твой барбер». Первая цифра — мастер, вторая — старший мастер.</p>
+  </section>
+
+  <footer class="foot">
+    <b>Твой барбер</b>
+    <span>Астрахань, ул. Татищева, 22</span>
+    <span>Мастера: Кирилл, Лера, Артур</span>
+    <span>Демо-версия сайта</span>
+  </footer>
+</main>
+
+<div class="sheet-backdrop" id="sheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="sheet-head">
+      <h2 id="sheet-title">Запись</h2>
+      <button type="button" class="icon-btn" data-close aria-label="Закрыть">×</button>
+    </div>
+
+    <form id="book-form" novalidate>
+      <div class="field">
+        <label for="bk-service">Услуга</label>
+        <select id="bk-service" class="inp"></select>
+      </div>
+      <div class="field">
+        <span class="lbl" id="lbl-barber">Мастер</span>
+        <div class="chips" id="bk-barbers" role="group" aria-labelledby="lbl-barber"></div>
+      </div>
+      <div class="field">
+        <span class="lbl" id="lbl-date">День</span>
+        <div class="chips" id="bk-dates" role="group" aria-labelledby="lbl-date"></div>
+        <span class="err" id="err-date"></span>
+      </div>
+      <div class="field">
+        <span class="lbl" id="lbl-time">Время</span>
+        <div class="times" id="bk-times" role="group" aria-labelledby="lbl-time"></div>
+        <span class="err" id="err-time"></span>
+      </div>
+      <div class="field">
+        <label for="bk-name">Имя</label>
+        <input id="bk-name" class="inp" type="text" autocomplete="given-name" placeholder="Как к тебе обращаться">
+        <span class="err" id="err-name"></span>
+      </div>
+      <div class="field">
+        <label for="bk-phone">Телефон</label>
+        <input id="bk-phone" class="inp" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__">
+        <span class="err" id="err-phone"></span>
+      </div>
+      <div class="field">
+        <label for="bk-promo">Промокод</label>
+        <input id="bk-promo" class="inp" type="text" autocapitalize="characters" placeholder="Появится после подбора стрижки">
+      </div>
+      <button type="submit" class="btn btn-block">Записаться</button>
+    </form>
+
+    <div id="book-done" hidden></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Data ---------- */
+  var FACE_SVG = {
+    oval:'<svg viewBox="0 0 60 72" fill="none" stroke="currentColor" stroke-width="2.5"><ellipse cx="30" cy="36" rx="19" ry="28"/></svg>',
+    round:'<svg viewBox="0 0 60 72" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="30" cy="36" r="24"/></svg>',
+    square:'<svg viewBox="0 0 60 72" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="8" y="10" width="44" height="52" rx="9"/></svg>',
+    long:'<svg viewBox="0 0 60 72" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="14" y="3" width="32" height="66" rx="16"/></svg>',
+    heart:'<svg viewBox="0 0 60 72" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 20C7 10 17 6 30 6s23 4 23 14c0 18-12 42-23 46C19 62 7 38 7 20Z"/></svg>',
+    unknown:'<svg viewBox="0 0 60 72" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="4 4"><ellipse cx="30" cy="36" rx="21" ry="27"/><text x="30" y="45" text-anchor="middle" font-size="26" font-family="Manrope,sans-serif" font-weight="700" fill="currentColor" stroke="none">?</text></svg>'
+  };
+  var HAIR_SVG = {
+    straight:'<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M10 6v28M20 6v28M30 6v28"/></svg>',
+    wavy:'<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M10 6c-4 5 4 9 0 14s4 9 0 14M20 6c-4 5 4 9 0 14s4 9 0 14M30 6c-4 5 4 9 0 14s4 9 0 14"/></svg>',
+    curly:'<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 6c6 0 6 7 0 7s-6 7 0 7 6 7 0 7-6 7 0 7M26 6c6 0 6 7 0 7s-6 7 0 7 6 7 0 7-6 7 0 7"/></svg>',
+    thin:'<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M9 10v24M16 14v20M23 8v26M31 16v18"/></svg>'
+  };
+
+  var QUESTIONS = [
+    {key:'face', title:'Какая у тебя форма лица?', hint:'Посмотри в зеркало, убрав волосы со лба. Не уверен? Жми «Не знаю».', layout:'faces', opts:[
+      {v:'oval',t:'Овальное',icon:FACE_SVG.oval},
+      {v:'round',t:'Круглое',icon:FACE_SVG.round},
+      {v:'square',t:'Квадратное',icon:FACE_SVG.square},
+      {v:'long',t:'Вытянутое',icon:FACE_SVG.long},
+      {v:'heart',t:'Треугольное',icon:FACE_SVG.heart},
+      {v:'unknown',t:'Не знаю',icon:FACE_SVG.unknown}
+    ]},
+    {key:'hair', title:'Какие у тебя волосы?', hint:'От этого зависит, как стрижка будет держать форму.', layout:'two', opts:[
+      {v:'straight',t:'Прямые',icon:HAIR_SVG.straight},
+      {v:'wavy',t:'Волнистые',icon:HAIR_SVG.wavy},
+      {v:'curly',t:'Кудрявые',icon:HAIR_SVG.curly},
+      {v:'thin',t:'Тонкие или редеют',icon:HAIR_SVG.thin}
+    ]},
+    {key:'style', title:'Как хочешь выглядеть?', hint:'Выбери то, что ближе всего.', layout:'list', opts:[
+      {v:'classic',t:'Строго и аккуратно',s:'Офис, встречи, классика'},
+      {v:'modern',t:'Модно, с контрастом',s:'Фейды и чёткие переходы'},
+      {v:'short',t:'Коротко и практично',s:'Постригся и забыл на месяц'},
+      {v:'volume',t:'С объёмом сверху',s:'Длина, укладка, характер'}
+    ]},
+    {key:'care', title:'Сколько времени готов тратить на укладку?', hint:'Честно. Стрижка должна жить без барбера.', layout:'list', opts:[
+      {v:'0',t:'Нисколько',s:'Помыл голову и пошёл'},
+      {v:'1',t:'Пару минут',s:'Немного воска или глины'},
+      {v:'2',t:'Сколько нужно',s:'Фен, средства, результат'}
+    ]},
+    {key:'beard', title:'Что с бородой?', hint:'Подскажем, что добавить к стрижке.', layout:'list', opts:[
+      {v:'none',t:'Бороды нет и не надо'},
+      {v:'has',t:'Есть, нужно оформить'},
+      {v:'grow',t:'Хочу отрастить'}
+    ]}
+  ];
+
+  // face/hair/style scores: how well the cut fits. care: how much styling it needs (0–2).
+  var CUTS = [
+    {id:'crop', name:'Кроп с фейдом', price:700, dur:'45–60', care:1,
+     desc:'Короткая текстурная чёлка вперёд и плавный переход на висках от кожи. Смотрится аккуратно даже без укладки.',
+     zones:[1,3,35,40],
+     face:{oval:2,round:2,square:2,long:3,heart:2}, hair:{straight:2,wavy:3,curly:1,thin:3}, style:{modern:3,short:2,classic:0,volume:0}},
+    {id:'undercut', name:'Андеркат', price:900, dur:'60', care:2,
+     desc:'Длинный верх и коротко выбритые бока с чётким контрастом. Верх зачёсывается назад или набок.',
+     zones:[3,3,70,80],
+     face:{oval:3,round:2,square:2,long:0,heart:1}, hair:{straight:3,wavy:2,curly:0,thin:0}, style:{modern:3,volume:2,classic:0,short:0}},
+    {id:'pompadour', name:'Помпадур', price:900, dur:'60', care:2,
+     desc:'Объёмный верх, поднятый и зачёсанный назад, бока короче. Для тех, кто любит выглядеть собранно.',
+     zones:[6,9,60,80],
+     face:{oval:3,round:3,square:2,long:-1,heart:1}, hair:{straight:2,wavy:3,curly:0,thin:-1}, style:{volume:3,classic:1,modern:1,short:0}},
+    {id:'taper', name:'Классика с тейпером', price:700, dur:'45–60', care:1,
+     desc:'Классическая мужская стрижка с мягким переходом по вискам и затылку. Уместна и в офисе, и на свадьбе.',
+     zones:[6,12,40,45],
+     face:{oval:2,round:2,square:2,long:2,heart:2}, hair:{straight:3,wavy:2,curly:1,thin:2}, style:{classic:3,short:1,modern:0,volume:0}},
+    {id:'box', name:'Бокс', price:700, dur:'45–60', care:0,
+     desc:'Очень короткие бока и затылок, немного длины сверху. Минимум ухода, форма держится 3–4 недели.',
+     zones:[1,3,15,20],
+     face:{oval:3,round:0,square:3,long:1,heart:0}, hair:{straight:2,wavy:2,curly:2,thin:3}, style:{short:3,modern:1,classic:0,volume:0}},
+    {id:'halfbox', name:'Полубокс', price:700, dur:'45–60', care:0,
+     desc:'Как бокс, но с длиной сверху побольше и мягким переходом. Универсальный вариант на каждый день.',
+     zones:[3,6,30,35],
+     face:{oval:3,round:1,square:3,long:1,heart:1}, hair:{straight:2,wavy:2,curly:1,thin:2}, style:{short:2,classic:2,modern:0,volume:0}},
+    {id:'canadian', name:'Канадка', price:700, dur:'45–60', care:1,
+     desc:'Объём на макушке и удлинённая чёлка, короткие бока. Классика с характером.',
+     zones:[6,9,30,55],
+     face:{oval:2,round:2,square:3,long:1,heart:2}, hair:{straight:3,wavy:2,curly:0,thin:1}, style:{classic:2,volume:2,modern:0,short:0}},
+    {id:'texture', name:'Текстурный верх', price:700, dur:'45–60', care:0,
+     desc:'Короткие бока с переходом и сохранённая естественная текстура сверху: волна или кудри работают на образ.',
+     zones:[1,3,45,40],
+     face:{oval:2,round:2,square:2,long:1,heart:2}, hair:{straight:0,wavy:3,curly:4,thin:0}, style:{modern:2,volume:2,classic:0,short:0}},
+    {id:'buzz', name:'Базз-кат', price:400, dur:'30', care:0,
+     desc:'Одна длина под машинку по всей голове. Ноль укладки, максимум уверенности.',
+     zones:[3,3,6,6],
+     face:{oval:3,round:-1,square:3,long:0,heart:-1}, hair:{straight:1,wavy:1,curly:2,thin:4}, style:{short:3,modern:0,classic:0,volume:0}}
+  ];
+  var ZONE_NAMES = ['Затылок','Виски','Макушка','Чёлка'];
+
+  var SERVICES = [
+    {id:'men', name:'Мужская стрижка', dur:'45–60', price:'700–800'},
+    {id:'long', name:'Удлинённая стрижка', dur:'60', price:'900'},
+    {id:'kids', name:'Детская стрижка до 12 лет', dur:'45–60', price:'600–700'},
+    {id:'beard', name:'Борода', dur:'30', price:'500–600'},
+    {id:'clip05', name:'Под машинку, от 0,5 насадки', dur:'30', price:'500–600'},
+    {id:'clip1', name:'Под машинку, 1 насадка', dur:'30–60', price:'400'},
+    {id:'edge', name:'Окантовка', dur:'15', price:'100'},
+    {id:'wax', name:'Воск', dur:'15', price:'100'},
+    {id:'tone', name:'Тонировка головы', dur:'30', price:'800'},
+    {id:'tonebeard', name:'Тонирование бороды', dur:'30', price:'400'},
+    {id:'perm', name:'Химическая завивка', dur:'120', price:'3 000'}
+  ];
+  var BARBERS = ['Любой мастер','Кирилл','Лера','Артур'];
+
+  var FACE_DAT = {oval:'овальному лицу',round:'круглому лицу',square:'квадратному лицу',long:'вытянутому лицу',heart:'треугольному лицу'};
+  var HAIR_ACC = {straight:'прямые волосы',wavy:'волнистые волосы',curly:'кудрявые волосы',thin:'тонкие волосы'};
+  var CARE_TXT = ['укладка не нужна','укладка 2–3 минуты','укладка 5–10 минут'];
+  var MONTHS = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+  var WDAYS = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Helpers ---------- */
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function rub(n){ return n.toLocaleString('ru-RU') + ' ₽'; }
+  function lenTxt(mm){ return mm < 10 ? mm + ' мм' : (mm/10).toLocaleString('ru-RU') + ' см'; }
+  function store(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } }
+
+  /* ---------- Promo code (attribution) ---------- */
+  var promo = store('brb_promo') || '';
+  function ensurePromo(){
+    if(promo) return promo;
+    var a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789', s='';
+    for(var i=0;i<4;i++) s += a[Math.floor(Math.random()*a.length)];
+    promo = 'BRB-' + s;
+    store('brb_promo', promo);
+    return promo;
+  }
+
+  /* ---------- Quiz ---------- */
+  var state = {step:0, a:{}};
+  var quiz = $('quiz');
+
+  function scoreCut(c, a){
+    var s = a.face === 'unknown' ? 1 : c.face[a.face];
+    s += c.hair[a.hair];
+    s += c.style[a.style] || 0;
+    var t = +a.care;
+    s += t >= c.care ? 2 : -(c.care - t) * 2;
+    return s;
+  }
+
+  function renderQuestion(){
+    var q = QUESTIONS[state.step], n = QUESTIONS.length;
+    var pct = Math.round(state.step / n * 100);
+    var html = '<div class="q-meta"><span>Вопрос ' + (state.step+1) + ' из ' + n + '</span><span>' + pct + '%</span></div>' +
+      '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + state.step + '"><span style="width:' + Math.max(pct,4) + '%"></span></div>' +
+      '<h2 class="q-title">' + q.title + '</h2>' +
+      (q.hint ? '<p class="q-hint">' + q.hint + '</p>' : '') +
+      '<div class="opts ' + (q.layout === 'list' ? '' : q.layout) + '">';
+    q.opts.forEach(function(o){
+      var on = state.a[q.key] === o.v ? ' is-on' : '';
+      html += '<button type="button" class="opt' + on + '" data-opt="' + o.v + '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
+        (o.icon || '') + '<span><span class="opt-t">' + o.t + '</span>' + (o.s ? '<span class="opt-s">' + o.s + '</span>' : '') + '</span></button>';
+    });
+    html += '</div><div class="q-nav">' +
+      (state.step > 0 ? '<button type="button" class="linkbtn" data-back>← Назад</button>' : '<span></span>') +
+      '</div>';
+    quiz.innerHTML = html;
+  }
+
+  function optLabel(key){
+    var q = QUESTIONS.filter(function(x){return x.key===key;})[0];
+    var o = q.opts.filter(function(x){return x.v===state.a[key];})[0];
+    return o ? o.t : '';
+  }
+
+  function renderResults(){
+    var a = state.a;
+    var ranked = CUTS.map(function(c){ return {c:c, s:scoreCut(c,a)}; })
+      .sort(function(x,y){ return y.s - x.s; }).slice(0,3);
+    var code = ensurePromo();
+
+    var chips = ['face','hair','style','care'].map(function(k){
+      var t = optLabel(k);
+      if(k==='face') t = a.face==='unknown' ? 'Форма лица: не знаю' : 'Лицо: ' + t.toLowerCase();
+      if(k==='care') t = 'Укладка: ' + t.toLowerCase();
+      return '<li>' + t + '</li>';
+    }).join('');
+
+    var html = '<p class="eyebrow">Готово · твой подбор</p>' +
+      '<h2 class="res-title">Тебе подойдут эти стрижки</h2>' +
+      '<ul class="answers">' + chips + '</ul><div class="cuts">';
+
+    ranked.forEach(function(r, i){
+      var c = r.c;
+      var pct = Math.max(55, Math.min(98, Math.round(58 + 40 * r.s / 12)));
+      var fits = [];
+      if(a.face !== 'unknown' && c.face[a.face] >= 2) fits.push('Подходит ' + FACE_DAT[a.face]);
+      if(c.hair[a.hair] >= 2) fits.push('Ложится на ' + HAIR_ACC[a.hair]);
+      if((c.style[a.style]||0) >= 2) fits.push('Твой стиль');
+      if(+a.care >= c.care) fits.push(CARE_TXT[c.care][0].toUpperCase() + CARE_TXT[c.care].slice(1));
+      var zones = c.zones.map(function(mm, zi){
+        var w = Math.max(3, Math.round(mm / 80 * 100));
+        return '<div class="zone"><span>' + ZONE_NAMES[zi] + '</span><span class="zone-bar"><span style="width:' + w + '%"></span></span><span class="zone-v">' + lenTxt(mm) + '</span></div>';
+      }).join('');
+      html += '<article class="cut' + (i===0 ? ' best' : '') + '">' +
+        (i===0 ? '<span class="badge">Лучшее совпадение</span>' : '') +
+        '<div class="cut-top"><h3>' + c.name + '</h3><span class="match">' + pct + '%</span></div>' +
+        '<p class="cut-desc">' + c.desc + '</p>' +
+        '<div class="zones" aria-label="Длина волос по зонам">' + zones + '</div>' +
+        '<p class="zones-cap">Длина по зонам, шкала 0–8 см</p>' +
+        (fits.length ? '<ul class="fits">' + fits.map(function(f){return '<li>' + f + '</li>';}).join('') + '</ul>' : '') +
+        '<div class="cut-foot"><span class="price">от ' + rub(c.price) + ' · ' + c.dur + ' мин</span>' +
+        '<button type="button" class="btn btn-sm" data-book="' + c.id + '">Записаться</button></div>' +
+        '</article>';
+    });
+    html += '</div>';
+
+    if(a.beard === 'has'){
+      html += '<div class="note"><b>Добавь оформление бороды</b>Стрижка + борода от ' + rub(1200) + ': форма бороды под новую стрижку и чёткий контур.</div>';
+    } else if(a.beard === 'grow'){
+      html += '<div class="note"><b>Отращиваешь бороду?</b>Барбер подскажет форму под твоё лицо. Первую коррекцию лучше сделать через 3–4 недели.</div>';
+    }
+
+    html += '<div class="promo"><span class="promo-lbl">Скидка 15% на первый визит</span>' +
+      '<div class="promo-row"><span class="promo-code" id="promo-code">' + code + '</span>' +
+      '<button type="button" class="btn btn-sm btn-ghost" data-copy>Скопировать</button></div>' +
+      '<p class="promo-sub">Код уже подставлен в запись. Можно просто назвать его барберу.</p></div>' +
+      '<div class="res-actions"><button type="button" class="btn btn-block" data-book="' + ranked[0].c.id + '">Записаться на «' + ranked[0].c.name + '»</button>' +
+      '<button type="button" class="linkbtn" data-restart>Пройти подбор заново</button></div>';
+
+    quiz.innerHTML = html;
+  }
+
+  function render(){ state.step < QUESTIONS.length ? renderQuestion() : renderResults(); }
+
+  function toQuiz(){
+    var top = quiz.getBoundingClientRect().top;
+    if(top < 70 || top > window.innerHeight * 0.45){
+      quiz.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block:'start'});
+    }
+  }
+
+  /* ---------- Services list ---------- */
+  $('svc-list').innerHTML = SERVICES.map(function(s){
+    return '<li><span class="svc-n">' + s.name + '</span><span class="svc-p">' + s.price + ' ₽</span><span class="svc-d">' + s.dur + ' мин</span></li>';
+  }).join('');
+
+  /* ---------- Booking ---------- */
+  var sheet = $('sheet'), form = $('book-form'), done = $('book-done');
+  var bk = {date:null, time:null, barber:BARBERS[0]};
+  var lastFocus = null;
+
+  function days(){
+    var out = [], now = new Date();
+    for(var i=0;i<7;i++){
+      var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
+      out.push({i:i, d:d, top: i===0 ? 'Сегодня' : i===1 ? 'Завтра' : WDAYS[d.getDay()], sub: d.getDate() + ' ' + MONTHS[d.getMonth()]});
+    }
+    return out;
+  }
+  function busy(di, h){ return ((di * 7 + h * 3) % 5) === 0; }
+
+  function fillServices(sel){
+    var el = $('bk-service');
+    var html = '<optgroup label="Услуги">' + SERVICES.map(function(s){
+      return '<option value="' + s.id + '">' + s.name + ' · ' + s.price + ' ₽</option>';
+    }).join('') + '</optgroup><optgroup label="Стрижки из подбора">' + CUTS.map(function(c){
+      return '<option value="' + c.id + '">' + c.name + ' · от ' + rub(c.price) + '</option>';
+    }).join('') + '</optgroup>';
+    el.innerHTML = html;
+    el.value = sel || 'men';
+  }
+
+  function renderBarbers(){
+    $('bk-barbers').innerHTML = BARBERS.map(function(b){
+      var on = bk.barber === b;
+      return '<button type="button" class="chip' + (on ? ' is-on' : '') + '" data-barber="' + b + '" aria-pressed="' + on + '">' + b + '</button>';
+    }).join('');
+  }
+  function renderDates(){
+    $('bk-dates').innerHTML = days().map(function(x){
+      var on = bk.date === x.i;
+      return '<button type="button" class="chip' + (on ? ' is-on' : '') + '" data-date="' + x.i + '" aria-pressed="' + on + '">' + x.top + '<small>' + x.sub + '</small></button>';
+    }).join('');
+  }
+  function renderTimes(){
+    var box = $('bk-times');
+    if(bk.date === null){ box.innerHTML = '<span class="hint-empty" style="grid-column:1/-1">Сначала выбери день</span>'; return; }
+    var nowH = new Date().getHours(), html = '', any = false;
+    for(var h=9; h<=20; h++){
+      var off = busy(bk.date, h) || (bk.date === 0 && h <= nowH);
+      if(!off) any = true;
+      var on = bk.time === h;
+      html += '<button type="button" class="chip' + (on ? ' is-on' : '') + '" data-time="' + h + '"' + (off ? ' disabled' : '') + ' aria-pressed="' + on + '">' + h + ':00</button>';
+    }
+    if(!any) html = '<span class="hint-empty" style="grid-column:1/-1">На этот день свободных окон нет, выбери другой</span>';
+    box.innerHTML = html;
+  }
+
+  function clearErrors(){ ['date','time','name','phone'].forEach(function(k){ $('err-' + k).textContent = ''; }); }
+
+  function openBook(serviceId){
+    lastFocus = document.activeElement;
+    bk = {date:null, time:null, barber:BARBERS[0]};
+    form.reset(); clearErrors();
+    fillServices(serviceId);
+    $('bk-promo').value = promo;
+    renderBarbers(); renderDates(); renderTimes();
+    form.hidden = false; done.hidden = true;
+    $('sheet-title').textContent = 'Запись';
+    sheet.hidden = false;
+    document.body.style.overflow = 'hidden';
+    sheet.querySelector('.sheet').scrollTop = 0;
+    setTimeout(function(){ $('bk-service').focus({preventScroll:true}); }, 30);
+  }
+  function closeBook(){
+    sheet.hidden = true;
+    document.body.style.overflow = '';
+    if(lastFocus && lastFocus.focus) lastFocus.focus({preventScroll:true});
+  }
+
+  function fmtPhone(v){
+    var d = v.replace(/\D/g,'');
+    if(!d) return '';
+    if(d[0] === '8') d = '7' + d.slice(1);
+    if(d[0] !== '7') d = '7' + d;
+    d = d.slice(0,11);
+    var out = '+7';
+    if(d.length > 1) out += ' (' + d.slice(1,4);
+    if(d.length >= 4) out += ')';
+    if(d.length > 4) out += ' ' + d.slice(4,7);
+    if(d.length > 7) out += '-' + d.slice(7,9);
+    if(d.length > 9) out += '-' + d.slice(9,11);
+    return out;
+  }
+  $('bk-phone').addEventListener('input', function(e){
+    if(e.inputType && e.inputType.indexOf('delete') === 0) return;
+    this.value = fmtPhone(this.value);
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    clearErrors();
+    var name = $('bk-name').value.trim();
+    var phoneDigits = $('bk-phone').value.replace(/\D/g,'');
+    var ok = true, first = null;
+    if(bk.date === null){ $('err-date').textContent = 'Выбери день визита'; ok = false; first = first || $('bk-dates'); }
+    if(bk.time === null){ $('err-time').textContent = 'Выбери свободное время'; ok = false; first = first || $('bk-times'); }
+    if(!name){ $('err-name').textContent = 'Напиши имя, чтобы барбер знал, кого ждать'; ok = false; first = first || $('bk-name'); }
+    if(phoneDigits.length !== 11){ $('err-phone').textContent = 'Нужен номер из 11 цифр, например +7 (927) 123-45-67'; ok = false; first = first || $('bk-phone'); }
+    if(!ok){ first.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block:'center'}); return; }
+
+    var sel = $('bk-service'), svcName = sel.options[sel.selectedIndex].text.split(' · ')[0];
+    var day = days()[bk.date];
+    var when = (bk.date < 2 ? day.top.toLowerCase() + ', ' : '') + day.sub + ', ' + bk.time + ':00';
+    var code = $('bk-promo').value.trim().toUpperCase();
+    var source = code && code === promo ? 'Сайт · подбор стрижки' : 'Сайт';
+
+    done.innerHTML =
+      '<div class="done-mark" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>' +
+      '<h3 class="done-title">Ждём тебя, ' + esc(name) + '!</h3>' +
+      '<p class="done-sub">' + esc(svcName) + ' · ' + esc(when) + ' · ' + esc(bk.barber) + '</p>' +
+      '<div class="owner"><div class="owner-h">Так запись увидит барбершоп в YClients</div><dl>' +
+        '<dt>Клиент</dt><dd>' + esc(name) + ', ' + esc(fmtPhone(phoneDigits)) + '</dd>' +
+        '<dt>Услуга</dt><dd>' + esc(svcName) + '</dd>' +
+        '<dt>Мастер</dt><dd>' + esc(bk.barber) + '</dd>' +
+        '<dt>Время</dt><dd>' + esc(when) + '</dd>' +
+        '<dt>Источник</dt><dd class="src">' + source + '</dd>' +
+        '<dt>Промокод</dt><dd>' + (code ? esc(code) + ' · −15%' : 'нет') + '</dd>' +
+      '</dl></div>' +
+      '<p class="demo-note">Это демо: запись никуда не отправлена. В рабочей версии она сразу попадёт в журнал YClients с меткой источника.</p>' +
+      '<button type="button" class="btn btn-block" data-close>Готово</button>';
+    form.hidden = true; done.hidden = false;
+    $('sheet-title').textContent = 'Записано';
+    sheet.querySelector('.sheet').scrollTop = 0;
+  });
+
+  /* ---------- Events ---------- */
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('[data-opt],[data-back],[data-restart],[data-book],[data-close],[data-copy],[data-barber],[data-date],[data-time]');
+    if(!t){ if(e.target === sheet) closeBook(); return; }
+
+    if(t.hasAttribute('data-opt')){
+      var q = QUESTIONS[state.step];
+      state.a[q.key] = t.getAttribute('data-opt');
+      t.classList.add('is-on');
+      setTimeout(function(){ state.step++; render(); toQuiz(); }, reduceMotion ? 0 : 160);
+    } else if(t.hasAttribute('data-back')){
+      state.step = Math.max(0, state.step - 1); render(); toQuiz();
+    } else if(t.hasAttribute('data-restart')){
+      state = {step:0, a:{}}; render(); toQuiz();
+    } else if(t.hasAttribute('data-book')){
+      openBook(t.getAttribute('data-book'));
+    } else if(t.hasAttribute('data-close')){
+      closeBook();
+    } else if(t.hasAttribute('data-copy')){
+      var codeEl = $('promo-code');
+      var flash = function(msg){ t.textContent = msg; setTimeout(function(){ t.textContent = 'Скопировать'; }, 1600); };
+      var selectIt = function(){ var r = document.createRange(); r.selectNodeContents(codeEl); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); flash('Выделено'); };
+      try{
+        navigator.clipboard.writeText(promo).then(function(){ flash('Скопировано'); }, selectIt);
+      }catch(err){ selectIt(); }
+    } else if(t.hasAttribute('data-barber')){
+      bk.barber = t.getAttribute('data-barber'); renderBarbers();
+    } else if(t.hasAttribute('data-date')){
+      bk.date = +t.getAttribute('data-date'); bk.time = null; $('err-date').textContent = ''; renderDates(); renderTimes();
+    } else if(t.hasAttribute('data-time')){
+      bk.time = +t.getAttribute('data-time'); $('err-time').textContent = ''; renderTimes();
+    }
+  });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !sheet.hidden) closeBook(); });
+
+  render();
+})();
+</script>
+</body>
+</html>
