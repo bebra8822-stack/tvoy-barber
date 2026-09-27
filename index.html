@@ -122,6 +122,7 @@ h1{font-family:var(--f-display);font-weight:600;font-size:clamp(34px,9.5vw,54px)
 .fine{font-size:13px;color:var(--muted);margin-top:10px}
 .foot{border-top:1px solid var(--line);padding-block:22px 36px;font-size:13px;color:var(--muted);display:grid;gap:4px}
 .foot b{color:var(--ink)}
+.foot a{color:inherit}
 
 /* Booking sheet */
 .sheet-backdrop{position:fixed;inset:0;z-index:50;background:var(--backdrop);display:flex;align-items:flex-end;justify-content:center}
@@ -171,7 +172,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
 <header class="top">
   <div class="wrap top-in">
-    <div class="brand"><span class="brand-name">Твой барбер</span><span class="brand-city">Астрахань · Татищева, 22</span></div>
+    <div class="brand"><span class="brand-name">Твой барбер</span><span class="brand-city">Астрахань · 4 филиала</span></div>
     <button type="button" class="btn btn-sm" data-book="">Записаться</button>
   </div>
   <div class="pole" aria-hidden="true"></div>
@@ -198,8 +199,10 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
   <footer class="foot">
     <b>Твой барбер</b>
-    <span>Астрахань, ул. Татищева, 22</span>
-    <span>Мастера: Кирилл, Лера, Артур</span>
+    <span>ул. Татищева, 22 · <a href="tel:+79379019006">+7 937 901-90-06</a> · 9:00–20:00</span>
+    <span>ул. 28-й Армии, 6 · <a href="tel:+79379019004">+7 937 901-90-04</a> · 9:00–20:00</span>
+    <span>пр. Воробьёва, 11/11 · <a href="tel:+79379069009">+7 937 906-90-09</a> · 9:00–20:00</span>
+    <span>ул. Днепровская, 4 · <a href="tel:+79371369009">+7 937 136-90-09</a> · 10:00–20:00</span>
     <span>Демо-версия сайта</span>
   </footer>
 </main>
@@ -212,6 +215,10 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     </div>
 
     <form id="book-form" novalidate>
+      <div class="field">
+        <span class="lbl" id="lbl-branch">Филиал</span>
+        <div class="chips" id="bk-branches" role="group" aria-labelledby="lbl-branch"></div>
+      </div>
       <div class="field">
         <label for="bk-service">Услуга</label>
         <select id="bk-service" class="inp"></select>
@@ -364,7 +371,15 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     {id:'tonebeard', name:'Тонирование бороды', dur:'30', price:'400'},
     {id:'perm', name:'Химическая завивка', dur:'120', price:'3 000'}
   ];
-  var BARBERS = ['Любой мастер','Кирилл','Лера','Артур'];
+  var ANY_BARBER = 'Любой мастер';
+  var BRANCHES = [
+    {id:'tatishcheva', name:'Татищева, 22', open:9, close:20, barbers:['Кирилл','Лера','Артур']},
+    {id:'28armii', name:'28-й Армии, 6', open:9, close:20, barbers:[]},
+    {id:'vorobyeva', name:'Воробьёва, 11/11', open:9, close:20, barbers:[]},
+    {id:'dneprovskaya', name:'Днепровская, 4', open:10, close:20, barbers:[]}
+  ];
+  function branchById(id){ for(var i=0;i<BRANCHES.length;i++) if(BRANCHES[i].id === id) return BRANCHES[i]; return BRANCHES[0]; }
+  var urlBranch = new URLSearchParams(location.search).get('branch');
 
   var FACE_DAT = {oval:'овальному лицу',round:'круглому лицу',square:'квадратному лицу',long:'вытянутому лицу',heart:'треугольному лицу'};
   var HAIR_ACC = {straight:'прямые волосы',wavy:'волнистые волосы',curly:'кудрявые волосы',thin:'тонкие волосы'};
@@ -505,7 +520,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
   /* ---------- Booking ---------- */
   var sheet = $('sheet'), form = $('book-form'), done = $('book-done');
-  var bk = {date:null, time:null, barber:BARBERS[0], visit:null};
+  var bk = {branch:branchById(urlBranch), date:null, time:null, barber:ANY_BARBER, visit:null};
   var lastFocus = null;
 
   function days(){
@@ -529,8 +544,14 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     el.value = sel || 'men';
   }
 
+  function renderBranches(){
+    $('bk-branches').innerHTML = BRANCHES.map(function(b){
+      var on = bk.branch === b;
+      return '<button type="button" class="chip' + (on ? ' is-on' : '') + '" data-branch="' + b.id + '" aria-pressed="' + on + '">' + b.name + '</button>';
+    }).join('');
+  }
   function renderBarbers(){
-    $('bk-barbers').innerHTML = BARBERS.map(function(b){
+    $('bk-barbers').innerHTML = [ANY_BARBER].concat(bk.branch.barbers).map(function(b){
       var on = bk.barber === b;
       return '<button type="button" class="chip' + (on ? ' is-on' : '') + '" data-barber="' + b + '" aria-pressed="' + on + '">' + b + '</button>';
     }).join('');
@@ -545,7 +566,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     var box = $('bk-times');
     if(bk.date === null){ box.innerHTML = '<span class="hint-empty" style="grid-column:1/-1">Сначала выбери день</span>'; return; }
     var nowH = new Date().getHours(), html = '', any = false;
-    for(var h=9; h<=20; h++){
+    for(var h=bk.branch.open; h<bk.branch.close; h++){
       var off = busy(bk.date, h) || (bk.date === 0 && h <= nowH);
       if(!off) any = true;
       var on = bk.time === h;
@@ -574,11 +595,11 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
   function openBook(serviceId){
     lastFocus = document.activeElement;
-    bk = {date:null, time:null, barber:BARBERS[0], visit:null};
+    bk = {branch:bk.branch, date:null, time:null, barber:ANY_BARBER, visit:null};
     form.reset(); clearErrors();
     fillServices(serviceId);
     $('bk-promo').value = promo;
-    renderBarbers(); renderDates(); renderTimes(); renderVisit(); promoHint();
+    renderBranches(); renderBarbers(); renderDates(); renderTimes(); renderVisit(); promoHint();
     form.hidden = false; done.hidden = true;
     $('sheet-title').textContent = 'Запись';
     sheet.hidden = false;
@@ -638,9 +659,11 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
       '<div class="done-mark" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>' +
       '<h3 class="done-title">Ждём тебя, ' + esc(name) + '!</h3>' +
       '<p class="done-sub">' + esc(svcName) + ' · ' + esc(when) + ' · ' + esc(bk.barber) + '</p>' +
+      '<p class="done-sub">Филиал: ' + esc(bk.branch.name) + '</p>' +
       '<div class="owner"><div class="owner-h">Так запись увидит барбершоп в YClients</div><dl>' +
         '<dt>Клиент</dt><dd>' + esc(name) + ', ' + esc(fmtPhone(phoneDigits)) + '</dd>' +
         '<dt>Услуга</dt><dd>' + esc(svcName) + '</dd>' +
+        '<dt>Филиал</dt><dd>' + esc(bk.branch.name) + '</dd>' +
         '<dt>Мастер</dt><dd>' + esc(bk.barber) + '</dd>' +
         '<dt>Время</dt><dd>' + esc(when) + '</dd>' +
         '<dt>Источник</dt><dd class="src">' + source + '</dd>' +
@@ -656,7 +679,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
   /* ---------- Events ---------- */
   document.addEventListener('click', function(e){
-    var t = e.target.closest('[data-opt],[data-back],[data-restart],[data-book],[data-close],[data-copy],[data-barber],[data-date],[data-time],[data-visit]');
+    var t = e.target.closest('[data-opt],[data-back],[data-restart],[data-book],[data-close],[data-copy],[data-branch],[data-barber],[data-date],[data-time],[data-visit]');
     if(!t){ if(e.target === sheet) closeBook(); return; }
 
     if(t.hasAttribute('data-visit')){
@@ -681,6 +704,9 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
       try{
         navigator.clipboard.writeText(promo).then(function(){ flash('Скопировано'); }, selectIt);
       }catch(err){ selectIt(); }
+    } else if(t.hasAttribute('data-branch')){
+      bk.branch = branchById(t.getAttribute('data-branch')); bk.barber = ANY_BARBER; bk.time = null;
+      renderBranches(); renderBarbers(); renderTimes();
     } else if(t.hasAttribute('data-barber')){
       bk.barber = t.getAttribute('data-barber'); renderBarbers();
     } else if(t.hasAttribute('data-date')){
@@ -692,6 +718,8 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !sheet.hidden) closeBook(); });
 
   render();
+  // Ссылка из Telegram-бота: ...?branch=<id>#book сразу открывает запись в нужный филиал
+  if(location.hash === '#book') openBook();
 })();
 </script>
 <script>
