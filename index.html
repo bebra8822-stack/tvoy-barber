@@ -122,7 +122,6 @@ h1{font-family:var(--f-display);font-weight:600;font-size:clamp(34px,9.5vw,54px)
 .fine{font-size:13px;color:var(--muted);margin-top:10px}
 .foot{border-top:1px solid var(--line);padding-block:22px 36px;font-size:13px;color:var(--muted);display:grid;gap:4px}
 .foot b{color:var(--ink)}
-.foot a{color:inherit}
 
 /* Booking sheet */
 .sheet-backdrop{position:fixed;inset:0;z-index:50;background:var(--backdrop);display:flex;align-items:flex-end;justify-content:center}
@@ -162,7 +161,17 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 #bg{position:fixed;left:0;top:0;width:100%;height:100vh;z-index:0;pointer-events:none;display:block}
 .promo-hint{font-size:13px;color:var(--muted)}
 .promo-hint:empty{display:none}
-@media (max-width:360px){.opts.faces{grid-template-columns:repeat(2,minmax(0,1fr))}.times{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.branch-pick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.branch-pick .chip{text-align:left;padding:8px 12px}
+.br-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.br{background:var(--surface);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.br-n{font-family:var(--f-display);font-weight:500;font-size:21px;line-height:1.15;text-transform:uppercase}
+.br-a{color:var(--muted);font-size:14px;margin-top:2px}
+.br-m{font-size:13px;color:var(--muted);margin-top:8px}
+.br-act{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.br-link{color:var(--ink);font-size:14px;font-weight:600;text-underline-offset:3px}
+.done-actions{display:grid;gap:8px}
+@media (max-width:360px){.branch-pick{grid-template-columns:1fr}.opts.faces{grid-template-columns:repeat(2,minmax(0,1fr))}.times{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -172,7 +181,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
 <header class="top">
   <div class="wrap top-in">
-    <div class="brand"><span class="brand-name">Твой барбер</span><span class="brand-city">Астрахань · 4 филиала</span></div>
+    <div class="brand"><span class="brand-name">Твой барбер</span><span class="brand-city">Астрахань · 5 филиалов</span></div>
     <button type="button" class="btn btn-sm" data-book="">Записаться</button>
   </div>
   <div class="pole" aria-hidden="true"></div>
@@ -197,12 +206,14 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     <p class="fine">Цены из онлайн-записи «Твой барбер». Первая цифра — мастер, вторая — старший мастер.</p>
   </section>
 
+  <section class="sec" aria-labelledby="br-title">
+    <h2 class="sec-title" id="br-title">Филиалы</h2>
+    <ul class="br-list" id="br-list"></ul>
+  </section>
+
   <footer class="foot">
     <b>Твой барбер</b>
-    <span>ул. Татищева, 22 · <a href="tel:+79379019006">+7 937 901-90-06</a> · 9:00–20:00</span>
-    <span>ул. 28-й Армии, 6 · <a href="tel:+79379019004">+7 937 901-90-04</a> · 9:00–20:00</span>
-    <span>пр. Воробьёва, 11/11 · <a href="tel:+79379069009">+7 937 906-90-09</a> · 9:00–20:00</span>
-    <span>ул. Днепровская, 4 · <a href="tel:+79371369009">+7 937 136-90-09</a> · 10:00–20:00</span>
+    <span>5 филиалов: Астрахань и Началово</span>
     <span>Демо-версия сайта</span>
   </footer>
 </main>
@@ -217,7 +228,8 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     <form id="book-form" novalidate>
       <div class="field">
         <span class="lbl" id="lbl-branch">Филиал</span>
-        <div class="chips" id="bk-branches" role="group" aria-labelledby="lbl-branch"></div>
+        <div class="branch-pick" id="bk-branches" role="group" aria-labelledby="lbl-branch"></div>
+        <span class="err" id="err-branch"></span>
       </div>
       <div class="field">
         <label for="bk-service">Услуга</label>
@@ -371,15 +383,19 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     {id:'tonebeard', name:'Тонирование бороды', dur:'30', price:'400'},
     {id:'perm', name:'Химическая завивка', dur:'120', price:'3 000'}
   ];
-  var ANY_BARBER = 'Любой мастер';
+  var ANY = 'Любой мастер';
   var BRANCHES = [
-    {id:'tatishcheva', name:'Татищева, 22', open:9, close:20, barbers:['Кирилл','Лера','Артур']},
-    {id:'28armii', name:'28-й Армии, 6', open:9, close:20, barbers:[]},
-    {id:'vorobyeva', name:'Воробьёва, 11/11', open:9, close:20, barbers:[]},
-    {id:'dneprovskaya', name:'Днепровская, 4', open:10, close:20, barbers:[]}
+    {id:'tatishcheva',  name:'Татищева, 22',     area:'Астрахань',      addr:'Астрахань, ул. Татищева, 22',     yc:220270,  open:9,  close:20, phone:'+7 937 901-90-06', masters:['Кирилл','Лера','Артур']},
+    {id:'vorobyeva',    name:'Воробьёва, 11/11', area:'Астрахань',      addr:'Астрахань, пр. Воробьёва, 11/11', yc:179702,  open:9,  close:20, phone:'+7 937 906-90-09', masters:['Женя','Лиза','Марина','Кристина']},
+    {id:'28armii',      name:'28-й Армии, 6',    area:'Астрахань',      addr:'Астрахань, ул. 28-й Армии, 6',    yc:971690,  open:9,  close:20, phone:'+7 937 901-90-04', masters:['Светлана','Анжела','Диана','Линара']},
+    {id:'dneprovskaya', name:'Днепровская, 4',   area:'Астрахань',      addr:'Астрахань, ул. Днепровская, 4',   yc:1692462, open:10, close:20, phone:'+7 937 136-90-09', masters:['Амина','Вадим','Анастасия']},
+    {id:'nachalovo',    name:'Началово',         area:'ул. Ленина, 17', addr:'с. Началово, ул. Ленина, 17',     yc:1993638, open:9,  close:20, phone:'',                 masters:['Мария','Иван']}
   ];
-  function branchById(id){ for(var i=0;i<BRANCHES.length;i++) if(BRANCHES[i].id === id) return BRANCHES[i]; return BRANCHES[0]; }
-  var urlBranch = new URLSearchParams(location.search).get('branch');
+  function ycUrl(b){ return 'https://n727454.yclients.com/company/' + b.yc + '/personal/menu?o='; }
+  function branchById(id){ return BRANCHES.filter(function(b){ return b.id === id; })[0] || null; }
+  function telHref(ph){ return 'tel:' + ph.replace(/[^\d+]/g, ''); }
+  var urlBranch = null;
+  try{ urlBranch = new URLSearchParams(location.search).get('branch'); }catch(e){}
 
   var FACE_DAT = {oval:'овальному лицу',round:'круглому лицу',square:'квадратному лицу',long:'вытянутому лицу',heart:'треугольному лицу'};
   var HAIR_ACC = {straight:'прямые волосы',wavy:'волнистые волосы',curly:'кудрявые волосы',thin:'тонкие волосы'};
@@ -518,9 +534,18 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     return '<li><span class="svc-n">' + s.name + '</span><span class="svc-p">' + s.price + ' ₽</span><span class="svc-d">' + s.dur + ' мин</span></li>';
   }).join('');
 
+  /* ---------- Branches list ---------- */
+  $('br-list').innerHTML = BRANCHES.map(function(b){
+    return '<li class="br"><div class="br-n">' + b.name + '</div><div class="br-a">' + b.addr + '</div>' +
+      '<div class="br-m">' + b.open + ':00–' + b.close + ':00' + (b.phone ? ' · <a class="br-link" href="' + telHref(b.phone) + '">' + b.phone + '</a>' : '') + '</div>' +
+      '<div class="br-m">Мастера: ' + b.masters.join(', ') + '</div>' +
+      '<div class="br-act"><button type="button" class="btn btn-sm" data-book="" data-pick="' + b.id + '">Записаться сюда</button>' +
+      '<a class="br-link" href="' + ycUrl(b) + '" target="_blank" rel="noopener">Запись в YClients ↗</a></div></li>';
+  }).join('');
+
   /* ---------- Booking ---------- */
   var sheet = $('sheet'), form = $('book-form'), done = $('book-done');
-  var bk = {branch:branchById(urlBranch), date:null, time:null, barber:ANY_BARBER, visit:null};
+  var bk = {branch:null, date:null, time:null, barber:ANY, visit:null};
   var lastFocus = null;
 
   function days(){
@@ -531,7 +556,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     }
     return out;
   }
-  function busy(di, h){ return ((di * 7 + h * 3) % 5) === 0; }
+  function busy(di, h){ var bi = Math.max(0, BRANCHES.indexOf(branchById(bk.branch))); return ((di * 7 + h * 3 + bi * 2) % 5) === 0; }
 
   function fillServices(sel){
     var el = $('bk-service');
@@ -546,12 +571,14 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
   function renderBranches(){
     $('bk-branches').innerHTML = BRANCHES.map(function(b){
-      var on = bk.branch === b;
-      return '<button type="button" class="chip' + (on ? ' is-on' : '') + '" data-branch="' + b.id + '" aria-pressed="' + on + '">' + b.name + '</button>';
+      var on = bk.branch === b.id;
+      return '<button type="button" class="chip' + (on ? ' is-on' : '') + '" data-branch="' + b.id + '" aria-pressed="' + on + '">' + b.name + '<small>' + b.area + '</small></button>';
     }).join('');
   }
   function renderBarbers(){
-    $('bk-barbers').innerHTML = [ANY_BARBER].concat(bk.branch.barbers).map(function(b){
+    var br = branchById(bk.branch);
+    if(!br){ $('bk-barbers').innerHTML = '<span class="hint-empty">Сначала выбери филиал</span>'; return; }
+    $('bk-barbers').innerHTML = [ANY].concat(br.masters).map(function(b){
       var on = bk.barber === b;
       return '<button type="button" class="chip' + (on ? ' is-on' : '') + '" data-barber="' + b + '" aria-pressed="' + on + '">' + b + '</button>';
     }).join('');
@@ -566,7 +593,8 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     var box = $('bk-times');
     if(bk.date === null){ box.innerHTML = '<span class="hint-empty" style="grid-column:1/-1">Сначала выбери день</span>'; return; }
     var nowH = new Date().getHours(), html = '', any = false;
-    for(var h=bk.branch.open; h<bk.branch.close; h++){
+    var br = branchById(bk.branch) || {open:9, close:20};
+    for(var h=br.open; h<br.close; h++){
       var off = busy(bk.date, h) || (bk.date === 0 && h <= nowH);
       if(!off) any = true;
       var on = bk.time === h;
@@ -591,11 +619,12 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     else h.textContent = '';
   }
 
-  function clearErrors(){ ['date','time','name','phone','visit'].forEach(function(k){ $('err-' + k).textContent = ''; }); }
+  function clearErrors(){ ['branch','date','time','name','phone','visit'].forEach(function(k){ $('err-' + k).textContent = ''; }); }
 
-  function openBook(serviceId){
+  function openBook(serviceId, pick){
     lastFocus = document.activeElement;
-    bk = {branch:bk.branch, date:null, time:null, barber:ANY_BARBER, visit:null};
+    bk = {branch:null, date:null, time:null, barber:ANY, visit:null};
+    bk.branch = (branchById(pick) || branchById(urlBranch) || branchById(store('brb_branch')) || {}).id || null;
     form.reset(); clearErrors();
     fillServices(serviceId);
     $('bk-promo').value = promo;
@@ -640,6 +669,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     var name = $('bk-name').value.trim();
     var phoneDigits = $('bk-phone').value.replace(/\D/g,'');
     var ok = true, first = null;
+    if(!bk.branch){ $('err-branch').textContent = 'Выбери филиал'; ok = false; first = first || $('bk-branches'); }
     if(bk.date === null){ $('err-date').textContent = 'Выбери день визита'; ok = false; first = first || $('bk-dates'); }
     if(bk.time === null){ $('err-time').textContent = 'Выбери свободное время'; ok = false; first = first || $('bk-times'); }
     if(!name){ $('err-name').textContent = 'Напиши имя, чтобы барбер знал, кого ждать'; ok = false; first = first || $('bk-name'); }
@@ -647,6 +677,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     if(!bk.visit){ $('err-visit').textContent = 'Отметь, был ли ты у нас раньше'; ok = false; first = first || $('bk-visit'); }
     if(!ok){ first.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block:'center'}); return; }
 
+    var br = branchById(bk.branch);
     var sel = $('bk-service'), svcName = sel.options[sel.selectedIndex].text.split(' · ')[0];
     var day = days()[bk.date];
     var when = (bk.date < 2 ? day.top.toLowerCase() + ', ' : '') + day.sub + ', ' + bk.time + ':00';
@@ -658,12 +689,11 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     done.innerHTML =
       '<div class="done-mark" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>' +
       '<h3 class="done-title">Ждём тебя, ' + esc(name) + '!</h3>' +
-      '<p class="done-sub">' + esc(svcName) + ' · ' + esc(when) + ' · ' + esc(bk.barber) + '</p>' +
-      '<p class="done-sub">Филиал: ' + esc(bk.branch.name) + '</p>' +
+      '<p class="done-sub">' + esc(svcName) + ' · ' + esc(when) + ' · ' + esc(bk.barber) + '<br>' + br.addr + '</p>' +
       '<div class="owner"><div class="owner-h">Так запись увидит барбершоп в YClients</div><dl>' +
         '<dt>Клиент</dt><dd>' + esc(name) + ', ' + esc(fmtPhone(phoneDigits)) + '</dd>' +
         '<dt>Услуга</dt><dd>' + esc(svcName) + '</dd>' +
-        '<dt>Филиал</dt><dd>' + esc(bk.branch.name) + '</dd>' +
+        '<dt>Филиал</dt><dd>' + br.name + '</dd>' +
         '<dt>Мастер</dt><dd>' + esc(bk.barber) + '</dd>' +
         '<dt>Время</dt><dd>' + esc(when) + '</dd>' +
         '<dt>Источник</dt><dd class="src">' + source + '</dd>' +
@@ -671,7 +701,8 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
         '<dt>Промокод</dt><dd>' + (code ? esc(code) + (discount ? ' · −15%' : ' · без скидки') : 'нет') + '</dd>' +
       '</dl></div>' +
       '<p class="demo-note">Это демо: запись никуда не отправлена. В рабочей версии она сразу попадёт в журнал YClients с меткой источника, а скидка сработает, только если номера телефона ещё нет в базе.</p>' +
-      '<button type="button" class="btn btn-block" data-close>Готово</button>';
+      '<div class="done-actions"><button type="button" class="btn btn-block" data-close>Готово</button>' +
+      '<a class="btn btn-ghost btn-block" href="' + ycUrl(br) + '" target="_blank" rel="noopener">Настоящая запись в YClients ↗</a></div>';
     form.hidden = true; done.hidden = false;
     $('sheet-title').textContent = 'Записано';
     sheet.querySelector('.sheet').scrollTop = 0;
@@ -679,10 +710,14 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
   /* ---------- Events ---------- */
   document.addEventListener('click', function(e){
-    var t = e.target.closest('[data-opt],[data-back],[data-restart],[data-book],[data-close],[data-copy],[data-branch],[data-barber],[data-date],[data-time],[data-visit]');
+    var t = e.target.closest('[data-opt],[data-back],[data-restart],[data-book],[data-close],[data-copy],[data-barber],[data-date],[data-time],[data-visit],[data-branch]');
     if(!t){ if(e.target === sheet) closeBook(); return; }
 
-    if(t.hasAttribute('data-visit')){
+    if(t.hasAttribute('data-branch')){
+      bk.branch = t.getAttribute('data-branch'); store('brb_branch', bk.branch);
+      bk.barber = ANY; bk.time = null; $('err-branch').textContent = '';
+      renderBranches(); renderBarbers(); renderTimes();
+    } else if(t.hasAttribute('data-visit')){
       bk.visit = t.getAttribute('data-visit'); $('err-visit').textContent = ''; renderVisit(); promoHint();
     } else if(t.hasAttribute('data-opt')){
       var q = QUESTIONS[state.step];
@@ -694,7 +729,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     } else if(t.hasAttribute('data-restart')){
       state = {step:0, a:{}}; render(); toQuiz();
     } else if(t.hasAttribute('data-book')){
-      openBook(t.getAttribute('data-book'));
+      openBook(t.getAttribute('data-book'), t.getAttribute('data-pick'));
     } else if(t.hasAttribute('data-close')){
       closeBook();
     } else if(t.hasAttribute('data-copy')){
@@ -704,9 +739,6 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
       try{
         navigator.clipboard.writeText(promo).then(function(){ flash('Скопировано'); }, selectIt);
       }catch(err){ selectIt(); }
-    } else if(t.hasAttribute('data-branch')){
-      bk.branch = branchById(t.getAttribute('data-branch')); bk.barber = ANY_BARBER; bk.time = null;
-      renderBranches(); renderBarbers(); renderTimes();
     } else if(t.hasAttribute('data-barber')){
       bk.barber = t.getAttribute('data-barber'); renderBarbers();
     } else if(t.hasAttribute('data-date')){
@@ -719,7 +751,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
   render();
   // Ссылка из Telegram-бота: ...?branch=<id>#book сразу открывает запись в нужный филиал
-  if(location.hash === '#book') openBook();
+  if(location.hash === '#book') openBook('', urlBranch);
 })();
 </script>
 <script>
