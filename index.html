@@ -171,6 +171,10 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 .br-act{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:12px}
 .br-link{color:var(--ink);font-size:14px;font-weight:600;text-underline-offset:3px}
 .done-actions{display:grid;gap:8px}
+.step-body{padding:12px;font-size:14px;display:grid;gap:6px}
+.step-body b{font-weight:700}
+.comment-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.comment{font-family:var(--f-mono);font-size:13px;background:var(--surface-2);padding:8px 10px;border-radius:6px;flex:1 1 200px;min-width:0;user-select:all;-webkit-user-select:all;overflow-wrap:anywhere}
 @media (max-width:360px){.branch-pick{grid-template-columns:1fr}.opts.faces{grid-template-columns:repeat(2,minmax(0,1fr))}.times{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -191,7 +195,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
   <section class="hero">
     <p class="eyebrow">Подбор стрижки · 5 вопросов · 1 минута</p>
     <h1>Какая стрижка подойдёт именно тебе?</h1>
-    <p class="lead">Ответь на пять вопросов про лицо, волосы и стиль. Покажем три стрижки, которые тебе пойдут. Если ты у нас впервые — <b>скидка 15% на первую стрижку</b>.</p>
+    <p class="lead">Ответь на пять вопросов про лицо, волосы и стиль. Покажем три стрижки, которые тебе пойдут, и запишем к мастеру в удобный филиал.</p>
     <div class="hero-actions">
       <a href="#quiz" class="btn">Подобрать стрижку</a>
       <button type="button" class="btn btn-ghost" data-book="">Сразу записаться</button>
@@ -214,7 +218,6 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
   <footer class="foot">
     <b>Твой барбер</b>
     <span>5 филиалов: Астрахань и Началово</span>
-    <span>Демо-версия сайта</span>
   </footer>
 </main>
 
@@ -265,7 +268,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
         <span class="err" id="err-visit"></span>
       </div>
       <div class="field">
-        <label for="bk-promo">Промокод</label>
+        <label for="bk-promo">Код подбора</label>
         <input id="bk-promo" class="inp" type="text" autocapitalize="characters" placeholder="Появится после подбора стрижки">
         <span class="promo-hint" id="promo-hint"></span>
       </div>
@@ -414,6 +417,8 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
   /* ---------- Promo code (attribution) ---------- */
   var promo = store('brb_promo') || '';
+  var lastPick = store('brb_pick') || '';
+  var lastComment = '';
   function ensurePromo(){
     if(promo) return promo;
     var a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789', s='';
@@ -466,6 +471,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     var ranked = CUTS.map(function(c){ return {c:c, s:scoreCut(c,a)}; })
       .sort(function(x,y){ return y.s - x.s; }).slice(0,3);
     var code = ensurePromo();
+    lastPick = ranked[0].c.name; store('brb_pick', lastPick);
 
     var chips = ['face','hair','style','care'].map(function(k){
       var t = optLabel(k);
@@ -509,11 +515,10 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
       html += '<div class="note"><b>Отращиваешь бороду?</b>Барбер подскажет форму под твоё лицо. Первую коррекцию лучше сделать через 3–4 недели.</div>';
     }
 
-    var used = store('brb_used') === '1';
-    html += '<div class="promo"><span class="promo-lbl">' + (used ? 'Твой код' : 'Скидка 15% на первую стрижку') + '</span>' +
+    html += '<div class="promo"><span class="promo-lbl">Твой код подбора</span>' +
       '<div class="promo-row"><span class="promo-code" id="promo-code">' + code + '</span>' +
       '<button type="button" class="btn btn-sm btn-ghost" data-copy>Скопировать</button></div>' +
-      '<p class="promo-sub">' + (used ? 'Скидку по этому коду ты уже использовал на первом визите. Дальше цены обычные.' : 'Только для новых клиентов и только на первый визит: барбер сверит номер телефона с базой. Код уже подставлен в запись.') + '</p></div>' +
+      '<p class="promo-sub">Сайт добавит его в комментарий к записи, и мастер увидит, какую стрижку ты выбрал.</p></div>' +
       '<div class="res-actions"><button type="button" class="btn btn-block" data-book="' + ranked[0].c.id + '">Записаться на «' + ranked[0].c.name + '»</button>' +
       '<button type="button" class="linkbtn" data-restart>Пройти подбор заново</button></div>';
 
@@ -611,12 +616,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     }).join('');
   }
   function promoHint(){
-    var h = $('promo-hint'), code = $('bk-promo').value.trim();
-    if(!code){ h.textContent = ''; return; }
-    if(bk.visit === 'repeat') h.textContent = 'Скидка по коду действует только на первый визит. Запишем без скидки.';
-    else if(store('brb_used') === '1') h.textContent = 'Этот код уже использован. Запишем без скидки.';
-    else if(bk.visit === 'new') h.textContent = 'Скидка 15% применится к первой стрижке.';
-    else h.textContent = '';
+    $('promo-hint').textContent = $('bk-promo').value.trim() ? 'Добавим его в комментарий к записи.' : '';
   }
 
   function clearErrors(){ ['branch','date','time','name','phone','visit'].forEach(function(k){ $('err-' + k).textContent = ''; }); }
@@ -682,38 +682,42 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     var day = days()[bk.date];
     var when = (bk.date < 2 ? day.top.toLowerCase() + ', ' : '') + day.sub + ', ' + bk.time + ':00';
     var code = $('bk-promo').value.trim().toUpperCase();
-    var source = code && code === promo ? 'Сайт · подбор стрижки' : 'Сайт';
-    var discount = !!code && bk.visit === 'new' && store('brb_used') !== '1';
-    if(discount) store('brb_used', '1');
+    var comment = 'Запись с сайта' + (code ? ' · код ' + code : '') + (lastPick ? ' · подбор: ' + lastPick : '') + ' · ' + (bk.visit === 'new' ? 'первый визит' : 'уже был');
+    var url = ycUrl(br) + '&utm_source=tvoybarber_site&utm_medium=booking' + (code ? '&utm_campaign=' + encodeURIComponent(code) : '');
+    lastComment = comment;
+    try{ navigator.clipboard.writeText(comment).then(function(){ var n = $('copy-note'); if(n) n.textContent = 'Комментарий уже скопирован, просто вставь его.'; }, function(){}); }catch(err){}
+    var win = null;
+    try{ win = window.open(url, '_blank'); if(win) win.opener = null; }catch(err){}
 
     done.innerHTML =
       '<div class="done-mark" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>' +
-      '<h3 class="done-title">Ждём тебя, ' + esc(name) + '!</h3>' +
+      '<h3 class="done-title">' + esc(name) + ', остался один шаг</h3>' +
       '<p class="done-sub">' + esc(svcName) + ' · ' + esc(when) + ' · ' + esc(bk.barber) + '<br>' + br.addr + '</p>' +
-      '<div class="owner"><div class="owner-h">Так запись увидит барбершоп в YClients</div><dl>' +
-        '<dt>Клиент</dt><dd>' + esc(name) + ', ' + esc(fmtPhone(phoneDigits)) + '</dd>' +
-        '<dt>Услуга</dt><dd>' + esc(svcName) + '</dd>' +
-        '<dt>Филиал</dt><dd>' + br.name + '</dd>' +
-        '<dt>Мастер</dt><dd>' + esc(bk.barber) + '</dd>' +
-        '<dt>Время</dt><dd>' + esc(when) + '</dd>' +
-        '<dt>Источник</dt><dd class="src">' + source + '</dd>' +
-        '<dt>Визит</dt><dd>' + (bk.visit === 'new' ? 'Первый · новый клиент' : 'Повторный') + '</dd>' +
-        '<dt>Промокод</dt><dd>' + (code ? esc(code) + (discount ? ' · −15%' : ' · без скидки') : 'нет') + '</dd>' +
-      '</dl></div>' +
-      '<p class="demo-note">Это демо: запись никуда не отправлена. В рабочей версии она сразу попадёт в журнал YClients с меткой источника, а скидка сработает, только если номера телефона ещё нет в базе.</p>' +
-      '<div class="done-actions"><button type="button" class="btn btn-block" data-close>Готово</button>' +
-      '<a class="btn btn-ghost btn-block" href="' + ycUrl(br) + '" target="_blank" rel="noopener">Настоящая запись в YClients ↗</a></div>';
+      '<div class="owner"><div class="owner-h">Подтверди запись в YClients</div><div class="step-body">' +
+        '<p>' + (win ? 'Мы открыли онлайн-запись филиала в новой вкладке.' : 'Нажми кнопку ниже: откроется онлайн-запись филиала.') +
+        ' Выбери там то же самое: <b>' + esc(bk.barber) + '</b>, <b>' + esc(when) + '</b>, «' + esc(svcName) + '».</p>' +
+        '<p class="lbl">Вставь в комментарий к записи:</p>' +
+        '<div class="comment-row"><code class="comment" id="comment-text">' + esc(comment) + '</code>' +
+        '<button type="button" class="btn btn-sm btn-ghost" data-copy-comment>Скопировать</button></div>' +
+        '<p class="promo-hint" id="copy-note"></p>' +
+      '</div></div>' +
+      '<div class="done-actions"><a class="btn btn-block" href="' + url + '" target="_blank" rel="noopener">Открыть запись в YClients ↗</a>' +
+      '<button type="button" class="btn btn-ghost btn-block" data-close>Готово</button></div>';
     form.hidden = true; done.hidden = false;
-    $('sheet-title').textContent = 'Записано';
+    $('sheet-title').textContent = 'Последний шаг';
     sheet.querySelector('.sheet').scrollTop = 0;
   });
 
   /* ---------- Events ---------- */
   document.addEventListener('click', function(e){
-    var t = e.target.closest('[data-opt],[data-back],[data-restart],[data-book],[data-close],[data-copy],[data-barber],[data-date],[data-time],[data-visit],[data-branch]');
+    var t = e.target.closest('[data-opt],[data-back],[data-restart],[data-book],[data-close],[data-copy],[data-barber],[data-date],[data-time],[data-visit],[data-branch],[data-copy-comment]');
     if(!t){ if(e.target === sheet) closeBook(); return; }
 
-    if(t.hasAttribute('data-branch')){
+    if(t.hasAttribute('data-copy-comment')){
+      var note = function(msg){ var n = $('copy-note'); if(n) n.textContent = msg; };
+      var selectC = function(){ var r = document.createRange(); r.selectNodeContents($('comment-text')); var sl = window.getSelection(); sl.removeAllRanges(); sl.addRange(r); note('Текст выделен, скопируй его.'); };
+      try{ navigator.clipboard.writeText(lastComment).then(function(){ note('Скопировано, вставь в комментарий.'); }, selectC); }catch(err){ selectC(); }
+    } else if(t.hasAttribute('data-branch')){
       bk.branch = t.getAttribute('data-branch'); store('brb_branch', bk.branch);
       bk.barber = ANY; bk.time = null; $('err-branch').textContent = '';
       renderBranches(); renderBarbers(); renderTimes();
