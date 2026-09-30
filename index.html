@@ -520,8 +520,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     return '<li class="br"><div class="br-n">' + b.name + '</div><div class="br-a">' + b.addr + '</div>' +
       '<div class="br-m">' + b.open + ':00–' + b.close + ':00' + (b.phone ? ' · <a class="br-link" href="' + telHref(b.phone) + '">' + b.phone + '</a>' : '') + '</div>' +
       '<div class="br-m">Мастера: ' + b.masters.join(', ') + '</div>' +
-      '<div class="br-act"><button type="button" class="btn btn-sm" data-book="" data-pick="' + b.id + '">Записаться сюда</button>' +
-      '<a class="br-link" href="' + ycUrl(b) + '" target="_blank" rel="noopener">Запись в YClients ↗</a></div></li>';
+      '<div class="br-act"><a class="btn btn-block" href="' + ycUrl(b) + '" target="_blank" rel="noopener">Записаться в YClients ↗</a></div></li>';
   }).join('');
 
   /* ---------- Booking ---------- */
