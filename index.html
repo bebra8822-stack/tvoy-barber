@@ -181,7 +181,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 <header class="top">
   <div class="wrap top-in">
     <div class="brand"><span class="brand-name">Твой барбер</span><span class="brand-city">Астрахань · 5 филиалов</span></div>
-    <button type="button" class="btn btn-sm" data-book="">Записаться</button>
+    <a class="btn btn-sm" href="https://n727454.yclients.com/" target="_blank" rel="noopener">Записаться</a>
   </div>
   <div class="pole" aria-hidden="true"></div>
 </header>
@@ -193,7 +193,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     <p class="lead">Ответь на пять вопросов про лицо, волосы и стиль. Покажем три стрижки, которые тебе пойдут, и запишем к мастеру в удобный филиал.</p>
     <div class="hero-actions">
       <a href="#quiz" class="btn">Подобрать стрижку</a>
-      <button type="button" class="btn btn-ghost" data-book="">Сразу записаться</button>
+      <a class="btn btn-ghost" href="https://n727454.yclients.com/" target="_blank" rel="noopener">Записаться</a>
     </div>
   </section>
 
@@ -385,6 +385,8 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     {id:'dneprovskaya', name:'Днепровская, 4',   area:'Астрахань',      addr:'Астрахань, ул. Днепровская, 4',   yc:1692462, open:9,  close:20, phone:'+7 937 136-90-09', masters:['Амина','Вадим','Анастасия']},
     {id:'nachalovo',    name:'Началово',         area:'ул. Ленина, 17', addr:'с. Началово, ул. Ленина, 17',     yc:1993638, open:9,  close:20, phone:'+7 909 373-11-66',                 masters:['Мария','Иван']}
   ];
+  // Онлайн-запись YCLIENTS: корень — выбор города и филиала
+  var YC_ROOT = 'https://n727454.yclients.com/';
   function ycUrl(b){ return 'https://n727454.yclients.com/company/' + b.yc + '/personal/menu?o='; }
   function branchById(id){ return BRANCHES.filter(function(b){ return b.id === id; })[0] || null; }
   function telHref(ph){ return 'tel:' + ph.replace(/[^\d+]/g, ''); }
@@ -484,7 +486,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
         '<p class="zones-cap">Длина по зонам, шкала 0–8 см</p>' +
         (fits.length ? '<ul class="fits">' + fits.map(function(f){return '<li>' + f + '</li>';}).join('') + '</ul>' : '') +
         '<div class="cut-foot"><span class="price">от ' + rub(c.price) + ' · ' + c.dur + ' мин</span>' +
-        '<button type="button" class="btn btn-sm" data-book="' + c.id + '">Записаться</button></div>' +
+        '<a class="btn btn-sm" href="' + YC_ROOT + '" target="_blank" rel="noopener">Записаться</a></div>' +
         '</article>';
     });
     html += '</div>';
@@ -495,7 +497,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
       html += '<div class="note"><b>Отращиваешь бороду?</b>Барбер подскажет форму под твоё лицо. Первую коррекцию лучше сделать через 3–4 недели.</div>';
     }
 
-    html += '<div class="res-actions"><button type="button" class="btn btn-block" data-book="' + ranked[0].c.id + '">Записаться на «' + ranked[0].c.name + '»</button>' +
+    html += '<div class="res-actions"><a class="btn btn-block" href="' + YC_ROOT + '" target="_blank" rel="noopener">Записаться</a>' +
       '<button type="button" class="linkbtn" data-restart>Пройти подбор заново</button></div>';
 
     quiz.innerHTML = html;
@@ -520,7 +522,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     return '<li class="br"><div class="br-n">' + b.name + '</div><div class="br-a">' + b.addr + '</div>' +
       '<div class="br-m">' + b.open + ':00–' + b.close + ':00' + (b.phone ? ' · <a class="br-link" href="' + telHref(b.phone) + '">' + b.phone + '</a>' : '') + '</div>' +
       '<div class="br-m">Мастера: ' + b.masters.join(', ') + '</div>' +
-      '<div class="br-act"><a class="btn btn-block" href="' + ycUrl(b) + '" target="_blank" rel="noopener">Записаться в YClients ↗</a></div></li>';
+      '<div class="br-act"><a class="btn btn-block" href="' + ycUrl(b) + '" target="_blank" rel="noopener">Записаться</a></div></li>';
   }).join('');
 
   /* ---------- Booking ---------- */
@@ -714,8 +716,8 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !sheet.hidden) closeBook(); });
 
   render();
-  // Ссылка из Telegram-бота: ...?branch=<id>#book сразу открывает запись в нужный филиал
-  if(location.hash === '#book') openBook('', urlBranch);
+  // Ссылка из Telegram-бота: ...?branch=<id>#book сразу ведёт в YCLIENTS нужного филиала
+  if(location.hash === '#book'){ var bb = branchById(urlBranch); location.replace(bb ? ycUrl(bb) : YC_ROOT); }
 })();
 </script>
 <script>
