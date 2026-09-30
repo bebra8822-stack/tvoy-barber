@@ -202,7 +202,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
   <section class="sec" aria-labelledby="svc-title">
     <h2 class="sec-title" id="svc-title">Услуги и цены</h2>
     <ul class="svc" id="svc-list"></ul>
-    <p class="fine">Цены из онлайн-записи «Твой барбер». Первая цифра — мастер, вторая — старший мастер.</p>
+    <p class="fine">Цены одинаковые во всех филиалах и зависят от уровня мастера: младший, старший или топ.</p>
   </section>
 
   <section class="sec" aria-labelledby="br-title">
@@ -324,7 +324,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
   // face/hair/style scores: how well the cut fits. care: how much styling it needs (0–2).
   var CUTS = [
-    {id:'crop', name:'Кроп с фейдом', price:700, dur:'45–60', care:1,
+    {id:'crop', name:'Кроп с фейдом', price:500, dur:'60', care:1,
      desc:'Короткая текстурная чёлка вперёд и плавный переход на висках от кожи. Смотрится аккуратно даже без укладки.',
      zones:[1,3,35,40],
      face:{oval:2,round:2,square:2,long:3,heart:2}, hair:{straight:2,wavy:3,curly:1,thin:3}, style:{modern:3,short:2,classic:0,volume:0}},
@@ -336,23 +336,23 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
      desc:'Объёмный верх, поднятый и зачёсанный назад, бока короче. Для тех, кто любит выглядеть собранно.',
      zones:[6,9,60,80],
      face:{oval:3,round:3,square:2,long:-1,heart:1}, hair:{straight:2,wavy:3,curly:0,thin:-1}, style:{volume:3,classic:1,modern:1,short:0}},
-    {id:'taper', name:'Классика с тейпером', price:700, dur:'45–60', care:1,
+    {id:'taper', name:'Классика с тейпером', price:500, dur:'60', care:1,
      desc:'Классическая мужская стрижка с мягким переходом по вискам и затылку. Уместна и в офисе, и на свадьбе.',
      zones:[6,12,40,45],
      face:{oval:2,round:2,square:2,long:2,heart:2}, hair:{straight:3,wavy:2,curly:1,thin:2}, style:{classic:3,short:1,modern:0,volume:0}},
-    {id:'box', name:'Бокс', price:700, dur:'45–60', care:0,
+    {id:'box', name:'Бокс', price:500, dur:'60', care:0,
      desc:'Очень короткие бока и затылок, немного длины сверху. Минимум ухода, форма держится 3–4 недели.',
      zones:[1,3,15,20],
      face:{oval:3,round:0,square:3,long:1,heart:0}, hair:{straight:2,wavy:2,curly:2,thin:3}, style:{short:3,modern:1,classic:0,volume:0}},
-    {id:'halfbox', name:'Полубокс', price:700, dur:'45–60', care:0,
+    {id:'halfbox', name:'Полубокс', price:500, dur:'60', care:0,
      desc:'Как бокс, но с длиной сверху побольше и мягким переходом. Универсальный вариант на каждый день.',
      zones:[3,6,30,35],
      face:{oval:3,round:1,square:3,long:1,heart:1}, hair:{straight:2,wavy:2,curly:1,thin:2}, style:{short:2,classic:2,modern:0,volume:0}},
-    {id:'canadian', name:'Канадка', price:700, dur:'45–60', care:1,
+    {id:'canadian', name:'Канадка', price:500, dur:'60', care:1,
      desc:'Объём на макушке и удлинённая чёлка, короткие бока. Классика с характером.',
      zones:[6,9,30,55],
      face:{oval:2,round:2,square:3,long:1,heart:2}, hair:{straight:3,wavy:2,curly:0,thin:1}, style:{classic:2,volume:2,modern:0,short:0}},
-    {id:'texture', name:'Текстурный верх', price:700, dur:'45–60', care:0,
+    {id:'texture', name:'Текстурный верх', price:500, dur:'60', care:0,
      desc:'Короткие бока с переходом и сохранённая естественная текстура сверху: волна или кудри работают на образ.',
      zones:[1,3,45,40],
      face:{oval:2,round:2,square:2,long:1,heart:2}, hair:{straight:0,wavy:3,curly:4,thin:0}, style:{modern:2,volume:2,classic:0,short:0}},
@@ -364,17 +364,18 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
   var ZONE_NAMES = ['Затылок','Виски','Макушка','Чёлка'];
 
   var SERVICES = [
-    {id:'men', name:'Мужская стрижка', dur:'45–60', price:'700–800'},
-    {id:'long', name:'Удлинённая стрижка', dur:'60', price:'900'},
-    {id:'kids', name:'Детская стрижка до 12 лет', dur:'45–60', price:'600–700'},
-    {id:'beard', name:'Борода', dur:'30', price:'500–600'},
-    {id:'clip05', name:'Под машинку, от 0,5 насадки', dur:'30', price:'500–600'},
-    {id:'clip1', name:'Под машинку, 1 насадка', dur:'30–60', price:'400'},
-    {id:'edge', name:'Окантовка', dur:'15', price:'100'},
-    {id:'wax', name:'Воск', dur:'15', price:'100'},
-    {id:'tone', name:'Тонировка головы', dur:'30', price:'800'},
-    {id:'tonebeard', name:'Тонирование бороды', dur:'30', price:'400'},
-    {id:'perm', name:'Химическая завивка', dur:'120', price:'3 000'}
+    {id:'men',       name:'Мужская стрижка',           dur:'60', price:'500–1 000', tiers:'младший 500 · старший 800 · топ 1 000'},
+    {id:'long',      name:'Удлинённая стрижка',        dur:'60', price:'900–1 100', tiers:'старший 900 · топ 1 100'},
+    {id:'kids',      name:'Детская стрижка до 12 лет', dur:'60', price:'400–900',   tiers:'младший 400 · старший 700 · топ 900'},
+    {id:'beard',     name:'Борода',                    dur:'30', price:'300–700',   tiers:'младший 300 · старший 600 · топ 700'},
+    {id:'clip1',     name:'Под машинку, 1 насадка',    dur:'30', price:'400'},
+    {id:'clip2',     name:'Под машинку, от 2 насадок', dur:'30', price:'600–800',   tiers:'старший 600 · топ 800'},
+    {id:'tone',      name:'Тонировка головы',          dur:'60', price:'800'},
+    {id:'tonebeard', name:'Тонировка бороды',          dur:'30', price:'от 400'},
+    {id:'style',     name:'Укладка',                   dur:'10', price:'200'},
+    {id:'wash',      name:'Мойка, сушка головы',       dur:'10', price:'200'},
+    {id:'wax',       name:'Воск',                      dur:'10', price:'от 100'},
+    {id:'edge',      name:'Окантовка',                 dur:'10', price:'от 100'}
   ];
   var ANY = 'Любой мастер';
   var BRANCHES = [
@@ -382,7 +383,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     {id:'vorobyeva',    name:'Воробьёва, 11/11', area:'Астрахань',      addr:'Астрахань, пр. Воробьёва, 11/11', yc:179702,  open:9,  close:20, phone:'+7 937 906-90-09', masters:['Женя','Лиза','Марина','Кристина']},
     {id:'28armii',      name:'28-й Армии, 6',    area:'Астрахань',      addr:'Астрахань, ул. 28-й Армии, 6',    yc:971690,  open:9,  close:20, phone:'+7 937 901-90-04', masters:['Светлана','Анжела','Диана','Линара']},
     {id:'dneprovskaya', name:'Днепровская, 4',   area:'Астрахань',      addr:'Астрахань, ул. Днепровская, 4',   yc:1692462, open:9,  close:20, phone:'+7 937 136-90-09', masters:['Амина','Вадим','Анастасия']},
-    {id:'nachalovo',    name:'Началово',         area:'ул. Ленина, 17', addr:'с. Началово, ул. Ленина, 17',     yc:1993638, open:9,  close:20, phone:'',                 masters:['Мария','Иван']}
+    {id:'nachalovo',    name:'Началово',         area:'ул. Ленина, 17', addr:'с. Началово, ул. Ленина, 17',     yc:1993638, open:9,  close:20, phone:'+7 909 373-11-66',                 masters:['Мария','Иван']}
   ];
   function ycUrl(b){ return 'https://n727454.yclients.com/company/' + b.yc + '/personal/menu?o='; }
   function branchById(id){ return BRANCHES.filter(function(b){ return b.id === id; })[0] || null; }
@@ -489,7 +490,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
     html += '</div>';
 
     if(a.beard === 'has'){
-      html += '<div class="note"><b>Добавь оформление бороды</b>Стрижка + борода от ' + rub(1200) + ': форма бороды под новую стрижку и чёткий контур.</div>';
+      html += '<div class="note"><b>Добавь оформление бороды</b>Стрижка + борода от ' + rub(800) + ': форма бороды под новую стрижку и чёткий контур.</div>';
     } else if(a.beard === 'grow'){
       html += '<div class="note"><b>Отращиваешь бороду?</b>Барбер подскажет форму под твоё лицо. Первую коррекцию лучше сделать через 3–4 недели.</div>';
     }
@@ -511,7 +512,7 @@ select.inp{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 5
 
   /* ---------- Services list ---------- */
   $('svc-list').innerHTML = SERVICES.map(function(s){
-    return '<li><span class="svc-n">' + s.name + '</span><span class="svc-p">' + s.price + ' ₽</span><span class="svc-d">' + s.dur + ' мин</span></li>';
+    return '<li><span class="svc-n">' + s.name + '</span><span class="svc-p">' + s.price + ' ₽</span><span class="svc-d">' + s.dur + ' мин' + (s.tiers ? ' · ' + s.tiers : '') + '</span></li>';
   }).join('');
 
   /* ---------- Branches list ---------- */
